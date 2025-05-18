@@ -4,7 +4,7 @@ import { motion, useAnimation } from "framer-motion";
 export default function Home() {
   return (
     <main
-      className="md:min-h-screen flex flex-col lg:justify-end py-6 md:py-24 px-6 md:px-10 lg:px-32"
+      className="md:min-h-screen flex flex-col lg:justify-end py-6 md:py-24 px-6 md:px-10 xl:px-32"
     >
       <div className="flex flex-col lg:flex-row items-center lg:items-end justify-between gap-12 px-0 md:px-12 text-center lg:text-left">
         {/* TEXTS */}

@@ -1,18 +1,31 @@
 body {
-  background-image: url("../public/assets/home/background-home-mobile.jpg");
   background-size: cover;
   background-color: #0b0d17;
   color: #d0d6f9;
 }
 
+.home-page {
+  background-image: url("../public/assets/home/background-home-mobile.jpg");
+}
+
+.destination-page {
+  background-image: url("../public/assets/destination/background-destination-mobile.jpg");
+}
+
 @media only screen and (min-width: 640px) {
-  body {
+  .home-page {
     background-image: url("../public/assets/home/background-home-tablet.jpg");
+  }
+  .destination-page {
+    background-image: url("../public/assets/destination/background-destination-tablet.jpg");
   }
 }
 @media only screen and (min-width: 1024px) {
-  body {
+  .home-page {
     background-image: url("../public/assets/home/background-home-desktop-4k.png");
+  }
+  .destination-page {
+    background-image: url("../public/assets/destination/background-destination-desktop.jpg");
   }
 }
 .barlow {
@@ -28,6 +41,7 @@ body {
 }
 
 .horizontal-line {
+  height: 1.5px;
   background-color: rgba(255, 255, 255, 0.25);
 }
 
