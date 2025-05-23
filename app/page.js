@@ -24,7 +24,7 @@ export default function Home() {
         </div>
 
         {/* BUTTON */}
-        <div className="py-16 flex items-center justify-center">
+        <div className="py-16 md:py-0 flex items-center justify-center">
           <Link
             href="/"
             className="w-[144px] h-[144px] md:w-[272px] md:h-[272px] rounded-full bg-white flex items-center justify-center text-black"
