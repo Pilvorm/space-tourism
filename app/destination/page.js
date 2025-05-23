@@ -42,15 +42,15 @@ export default function Destination() {
   return (
     <main className="md:min-h-screen flex flex-col lg:grid lg:grid-cols-2 items-center justify-center gap-6 lg:gap-y-6 lg:gap-x-8 p-6 md:p-10 lg:py-12 xl:px-32">
       {/* HEADER */}
-      <div className="barlow-condensed uppercase tracking-[4px] flex items-center justify-center md:self-start lg:col-span-2 lg:lg:place-self-start gap-6">
+      <div className="barlow-condensed text-base md:text-[20px] lg:text-[28px] uppercase tracking-[4px] flex items-center justify-center md:self-start lg:col-span-2 lg:lg:place-self-start gap-6">
         <span className="text-[rgba(255,255,255,0.25)] font-bold">01</span>
-        <p className="text-white text-base md:text-[20px]">
+        <p className="text-white">
           Pick Your Destination
         </p>
       </div>
 
       {/* PLANET IMAGE */}
-      <div className="flex items-center justify-center py-16">
+      <div className="flex items-center justify-center py-16 lg:py-32">
         <Image
           width={150}
           height={150}
@@ -86,7 +86,7 @@ export default function Destination() {
           {activeTab}
         </h1>
 
-        <p className="barlow font-light text-center lg:text-left lg:text-lg leading-[180%]">
+        <p className="barlow font-light text-center lg:text-left lg:text-lg leading-[180%] lg:min-h-[140px]">
           {destinations[activeTab].description}
         </p>
 

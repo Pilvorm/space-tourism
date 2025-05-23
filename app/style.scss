@@ -1,6 +1,24 @@
 $blue-main: #0b0d17;
 $blue-accent: #d0d6f9;
 
+/* Width */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Thumb */
+::-webkit-scrollbar-thumb {
+  background-color: $blue-accent; /* Tailwind blue-700 */
+  border-radius: 8px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
+
 body {
   background-size: cover;
   // background-attachment: fixed;
