@@ -32,6 +32,9 @@ body {
 .destination-page {
   background-image: url("../public/assets/destination/background-destination-mobile.jpg");
 }
+.crew-page {
+  background-image: url("../public/assets/crew/background-crew-mobile.jpg");
+}
 
 @media only screen and (min-width: 640px) {
   .home-page {
@@ -39,6 +42,9 @@ body {
   }
   .destination-page {
     background-image: url("../public/assets/destination/background-destination-tablet.jpg");
+  }
+  .crew-page {
+    background-image: url("../public/assets/crew/background-crew-tablet.jpg");
   }
 }
 
@@ -48,6 +54,9 @@ body {
   }
   .destination-page {
     background-image: url("../public/assets/destination/background-destination-desktop.jpg");
+  }
+  .crew-page {
+    background-image: url("../public/assets/crew/background-crew-desktop-4k.png");
   }
 }
 
@@ -72,4 +81,9 @@ body {
   position: absolute;
   transform: scale(0);
   transition: all 0.3s ease;
+}
+
+.fade-bottom {
+  mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
 }
