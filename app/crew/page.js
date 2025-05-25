@@ -5,42 +5,42 @@ import Image from "next/image";
 import { motion, useAnimation } from "framer-motion";
 import { useState } from "react";
 
-const destinations = {
-  moon: {
-    name: "moon",
+const crew = {
+  douglas: {
+    name: "Douglas Hurley",
+    rank: "Commander",
     description:
-      "See our planet as you’ve never seen it before. A perfect relaxing trip away to help regain perspective and come back refreshed. While you’re there, take in some history by visiting the Luna 2 and Apollo 11 landing sites.",
-    averageDistance: "384,400 km",
-    travelTime: "3 Days",
+      "Douglas Gerald Hurley is an American engineer, former Marine Corps pilot and former NASA astronaut. He launched into space for the third time as commander of Crew Dragon Demo-2.",
+    imgUrl: "douglas-hurley",
   },
-  mars: {
-    name: "mars",
+  mark: {
+    name: "Mark Shuttleworth",
+    rank: "Mission Specialist",
     description:
-      "Don’t forget to pack your hiking boots. You’ll need them to tackle Olympus Mons, the tallest planetary mountain in our solar system. It’s two and a half times the size of Everest!",
-    averageDistance: "225 Mil. km",
-    travelTime: "9 months",
+      "Mark Richard Shuttleworth is the founder and CEO of Canonical, the company behind the Linux-based Ubuntu operating system. Shuttleworth became the first South African to travel to space as a space tourist.",
+    imgUrl: "mark-shuttleworth",
   },
-  europa: {
-    name: "europa",
+  victor: {
+    name: "Victor Glover",
+    rank: "Pilot",
     description:
-      "The smallest of the four Galilean moons orbiting Jupiter, Europa is a winter lover’s dream. With an icy surface, it’s perfect for a bit of ice skating, curling, hockey, or simple relaxation in your snug wintery cabin.",
-    averageDistance: "628 Mil. km",
-    travelTime: "3 years",
+      "Pilot on the first operational flight of the SpaceX Crew Dragon to the International Space Station. Glover is a commander in the U.S. Navy where he pilots an F/A-18.He was a crew member of Expedition 64, and served as a station systems flight engineer. ",
+    imgUrl: "victor-glover",
   },
-  titan: {
-    name: "titan",
+  anousheh: {
+    name: "Anousheh Ansari",
+    rank: "Flight Engineer",
     description:
-      "The only moon known to have a dense atmosphere other than Earth, Titan is a home away from home (just a few hundred degrees colder!). As a bonus, you get striking views of the Rings of Saturn.",
-    averageDistance: "1.6 Bil. km",
-    travelTime: "7 years",
+      "Anousheh Ansari is an Iranian American engineer and co-founder of Prodea Systems. Ansari was the fourth self-funded space tourist, the first self-funded woman to fly to the ISS, and the first Iranian in space. ",
+    imgUrl: "anousheh-ansari",
   },
 };
 
 export default function Destination() {
-  const [activeTab, setActiveTab] = useState("moon");
+  const [activeTab, setActiveTab] = useState("douglas");
 
   return (
-    <main className="md:min-h-screen flex flex-col lg:grid lg:grid-cols-2 items-center justify-center gap-6 lg:gap-y-6 lg:gap-x-8 p-6 md:p-10 lg:py-12 xl:px-32">
+    <main className="md:min-h-screen flex flex-col lg:grid lg:grid-cols-2 items-center justify-center gap-6 lg:gap-y-6 lg:gap-x-8 p-6 md:p-10 md:pb-0 lg:py-12 xl:px-32">
       {/* HEADER */}
       <div className="barlow-condensed text-base md:text-[20px] lg:text-[28px] uppercase tracking-[4px] flex items-center justify-center md:self-start lg:col-span-2 lg:lg:place-self-start gap-6">
         <span className="text-[rgba(255,255,255,0.25)] font-bold">02</span>
@@ -48,43 +48,45 @@ export default function Destination() {
       </div>
 
       {/* CREW INFO */}
-      <div className="flex flex-col items-center justify-center gap-6 pt-10">
+      <div className="text-center lg:text-left flex flex-col items-center justify-center lg:items-start gap-6 pt-10 lg:pt-0 md:w-[70%] lg:w-full lg:h-full">
         {/* NAME & POSITION */}
-        <div className="bellefair text-center">
-          <span className="text-lg text-white opacity-50">COMMANDER</span>
-          <h1 className="text-2xl text-white mt-2">DOUGLAS HURLEY</h1>
+        <div className="bellefair lg:mt-auto uppercase">
+          <span className="text-lg lg:text-[32px] text-white opacity-50">
+            {crew[activeTab].rank}
+          </span>
+          <h1 className="text-2xl lg:text-[56px] text-white mt-2">
+            {crew[activeTab].name}
+          </h1>
         </div>
 
-        <p className="text-base text-center leading-[180%] min-h-[200px]">
-          Douglas Gerald Hurley is an American engineer, former Marine Corps
-          pilot and former NASA astronaut. He launched into space for the third
-          time as commander of Crew Dragon Demo-2.
+        <p className="text-base leading-[180%] min-h-[120px]">
+          {crew[activeTab].description}
         </p>
+
+        {/* TABS */}
+        <div className="flex justify-center lg:justify-start gap-4 w-full lg:mt-auto">
+          {Object.entries(crew).map(([key, member]) => {
+            const isActive = key === activeTab;
+            return (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key)}
+                className={`cursor-pointer w-[10px] h-[10px] rounded-full transition-all bg-white ${
+                  !isActive && "opacity-[18%] hover:opacity-100"
+                }`}
+              ></button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* TABS */}
-      <div className="flex justify-center gap-4 w-full">
-        {Object.entries(destinations).map(([key, destination]) => {
-          const isActive = key === activeTab;
-          return (
-            <button
-              key={key}
-              onClick={() => setActiveTab(key)}
-              className={`cursor-pointer w-[10px] h-[10px] rounded-full transition-all bg-white ${
-                !isActive && "opacity-[18%]"
-              }`}
-            ></button>
-          );
-        })}
-      </div>
-
-      <div className="flex items-center justify-center pb-8">
+      <div className="flex items-center justify-center pb-8 md:p-0">
         <Image
-        width={272}
-        height={340}
-          src={`/assets/crew/image-douglas-hurley.png`}
-          alt="PLANET"
-          className="fade-bottom md:w-[300px] md:h-[300px] lg:w-[480px] lg:h-[480px]"
+          width={272}
+          height={340}
+          src={`/assets/crew/image-${crew[activeTab].imgUrl}.png`}
+          alt={`Photo of crew member ${crew[activeTab].name}`}
+          className="fade-bottom object-cover md:w-auto md:h-[560px] lg:h-[676px]"
         />
       </div>
     </main>

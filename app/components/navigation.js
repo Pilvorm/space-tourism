@@ -38,7 +38,7 @@ const Navigation = ({}) => {
           className="w-10 h-10 md:w-12 md:h-12"
           alt="Space Tourism Logo"
         />
-        <div className="horizontal-line hidden lg:block z-[99] absolute left-[112px] bottom-[50%] w-[15vw] xl:w-[40vw] 2xl:w-[45vw]"></div>
+        <div className="horizontal-line hidden lg:block z-[99] absolute left-[112px] xl:left-[176px] bottom-[50%] w-[30vw] xl:w-[40vw] 2xl:w-[45vw] transition-all"></div>
       </div>
 
       <button className="px-6 md:hidden">

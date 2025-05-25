@@ -27,7 +27,7 @@ export default function Home() {
         <div className="py-16 md:py-0 flex items-center justify-center">
           <Link
             href="/"
-            className="w-[144px] h-[144px] md:w-[272px] md:h-[272px] rounded-full bg-white flex items-center justify-center text-black"
+            className="w-[144px] h-[144px] md:w-[272px] md:h-[272px] rounded-full bg-white flex items-center justify-center blue-main"
           >
             <h2 className="bellefair text-lg md:text-[32px]">EXPLORE</h2>
           </Link>
