@@ -4,49 +4,43 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useAnimation } from "framer-motion";
 import { useState } from "react";
+import PageLabel from "../components/pageLabel";
 
 const technologies = {
-  douglas: {
-    name: "Douglas Hurley",
-    rank: "Commander",
+  launch: {
+    name: "Launch Vehicle",
     description:
-      "Douglas Gerald Hurley is an American engineer, former Marine Corps pilot and former NASA astronaut. He launched into space for the third time as commander of Crew Dragon Demo-2.",
-    imgUrl: "douglas-hurley",
+      "A launch vehicle or carrier rocket is a rocket-propelled vehicle used to carry a payload from Earth's surface to space, usually to Earth orbit or beyond. Our WEB-X carrier rocket is the most powerful in operation. Standing 150 metres tall, it's quite an awe-inspiring sight on the launch pad!",
+    imgUrl: "launch-vehicle",
   },
-  mark: {
-    name: "Mark Shuttleworth",
-    rank: "Mission Specialist",
+  spaceport: {
+    name: "Spaceport",
     description:
-      "Mark Richard Shuttleworth is the founder and CEO of Canonical, the company behind the Linux-based Ubuntu operating system. Shuttleworth became the first South African to travel to space as a space tourist.",
-    imgUrl: "mark-shuttleworth",
+      "A spaceport or cosmodrome is a site for launching (or receiving) spacecraft, by analogy to the seaport for ships or airport for aircraft. Based in the famous Cape Canaveral, our spaceport is ideally situated to take advantage of the Earth’s rotation for launch.",
+    imgUrl: "spaceport",
   },
-  victor: {
-    name: "Victor Glover",
-    rank: "Pilot",
+  capsule: {
+    name: "Space Capsule",
     description:
-      "Pilot on the first operational flight of the SpaceX Crew Dragon to the International Space Station. Glover is a commander in the U.S. Navy where he pilots an F/A-18.He was a crew member of Expedition 64, and served as a station systems flight engineer. ",
-    imgUrl: "victor-glover",
+      "A space capsule is an often-crewed spacecraft that uses a blunt-body reentry capsule to reenter the Earth's atmosphere without wings. Our capsule is where you'll spend your time during the flight. It includes a space gym, cinema, and plenty of other activities to keep you entertained.",
+    imgUrl: "space-capsule",
   },
 };
 
 export default function Destination() {
-  const [activeTab, setActiveTab] = useState("douglas");
+  const [activeTab, setActiveTab] = useState("launch");
 
   return (
-    <main className="md:min-h-screen lg:py-12">
+    <div className="md:min-h-screen">
       {/* HEADER */}
-      <div className="barlow-condensed text-base md:text-[20px] lg:text-[28px] uppercase tracking-[4px] flex items-center justify-center md:justify-start gap-6 p-6 md:p-10 lg:py-0 xl:px-32">
-        <span className="text-[rgba(255,255,255,0.25)] font-bold">03</span>
-        <p className="text-white">SPACE LAUNCH 101</p>
-      </div>
+      <PageLabel pageNumber={3} label={"Space Launch 101"} />
 
-      <div className="lg:flex lg:flex-row-reverse items-center gap-8">
-
+      <main className="flex flex-col items-center justify-center lg:justify-between lg:flex-row-reverse lg:gap-8 pt-22 xl:pl-32 xl:pb-12">
         {/* IMAGE */}
-        <div className="flex items-center justify-center mt-16 pb-8 md:p-0 relative w-full h-[258px] md:h-[357px] lg:h-[600px] lg:w-1/2 tech-img">
+        <div className="flex items-center justify-center relative w-full h-[258px] md:h-[357px] lg:h-[500px] lg:w-[500px] xl:h-[600px] xl:w-[600px] tech-img">
           <Image
             fill
-            src={`/assets/technology/image-launch-vehicle-portrait.jpg`}
+            src={`/assets/technology/image-${technologies[activeTab].imgUrl}-portrait.jpg`}
             alt="PLANET"
             quality={100}
             className="object-cover object-bottom"
@@ -54,9 +48,9 @@ export default function Destination() {
         </div>
 
         {/* INFO */}
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 p-6 pt-8 pb-12 md:p-10 lg:py-0 lg:pl-10 lg:pr-0 xl:pl-32 lg:w-1/2">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 px-6 pt-8 pb-12 md:px-10 md:pb-10 xl:p-0 lg:w-1/2">
           {/* TABS */}
-          <div className="flex lg:flex-col justify-center gap-4 w-full lg:w-fit">
+          <div className="flex lg:flex-col justify-center gap-4 lg:gap-8 w-full lg:w-fit">
             {Object.entries(technologies).map(([key, tech], index) => {
               const isActive = key === activeTab;
               return (
@@ -75,27 +69,23 @@ export default function Destination() {
             })}
           </div>
 
+          {/* DESCRIPTION */}
           <div className="flex flex-col justify-center gap-10">
             <div className="bellefair text-center lg:text-left uppercase">
               <span className="lg:text-left text-lg md:text-2xl lg:text-[32px] text-white opacity-50">
                 THE TERMINOLOGY...
               </span>
               <h1 className="text-2xl md:text-[40px] lg:text-[56px] text-white">
-                LAUNCH VEHICLE
+                {technologies[activeTab].name}
               </h1>
             </div>
 
-            <p className="text-center lg:text-left text-base lg:text-lg leading-[180%] md:w-[70%] md:self-center lg:self-start">
-              A launch vehicle or carrier rocket is a rocket-propelled vehicle
-              used to carry a payload from Earth's surface to space, usually to
-              Earth orbit or beyond. Our WEB-X carrier rocket is the most
-              powerful in operation. Standing 150 metres tall, it's quite an
-              awe-inspiring sight on the launch pad!
+            <p className="text-center lg:text-left text-base lg:text-lg leading-[180%] md:w-[70%] lg:w-full md:self-center lg:self-start">
+              {technologies[activeTab].description}
             </p>
           </div>
         </div>
-
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useAnimation } from "framer-motion";
 import { useState } from "react";
+import PageLabel from "../components/pageLabel";
 
 const crew = {
   douglas: {
@@ -31,7 +32,7 @@ const crew = {
     name: "Anousheh Ansari",
     rank: "Flight Engineer",
     description:
-      "Anousheh Ansari is an Iranian American engineer and co-founder of Prodea Systems. Ansari was the fourth self-funded space tourist, the first self-funded woman to fly to the ISS, and the first Iranian in space. ",
+      "Anousheh Ansari is an Iranian American engineer and co-founder of Prodea Systems. Ansari was the fourth self-funded space tourist, the first self-funded woman to fly to the ISS, and the first Iranian in space.",
     imgUrl: "anousheh-ansari",
   },
 };
@@ -40,55 +41,56 @@ export default function Destination() {
   const [activeTab, setActiveTab] = useState("douglas");
 
   return (
-    <main className="md:min-h-screen flex flex-col lg:grid lg:grid-cols-2 items-center justify-center gap-6 lg:gap-y-6 lg:gap-x-8 p-6 md:p-10 md:pb-0 lg:py-12 xl:px-32">
+    <div className="md:min-h-screen">
       {/* HEADER */}
-      <div className="barlow-condensed text-base md:text-[20px] lg:text-[28px] uppercase tracking-[4px] flex items-center justify-center md:self-start lg:col-span-2 lg:lg:place-self-start gap-6">
-        <span className="text-[rgba(255,255,255,0.25)] font-bold">02</span>
-        <p className="text-white">MEET YOUR CREW</p>
-      </div>
+      <PageLabel pageNumber={2} label={"Meet Your Crew"} />
 
-      {/* CREW INFO */}
-      <div className="text-center lg:text-left flex flex-col items-center justify-center lg:items-start gap-6 pt-10 lg:pt-0 md:w-[70%] lg:w-full lg:h-full">
-        {/* NAME & POSITION */}
-        <div className="bellefair lg:mt-auto uppercase">
-          <span className="text-lg lg:text-[32px] text-white opacity-50">
-            {crew[activeTab].rank}
-          </span>
-          <h1 className="text-2xl lg:text-[56px] text-white mt-2">
-            {crew[activeTab].name}
-          </h1>
+      <main className="flex flex-col items-center justify-center lg:grid lg:grid-cols-2 p-6 md:p-10 lg:py-12 xl:px-32">
+        {/* CREW INFO */}
+        <div className="text-center lg:text-left flex flex-col items-center justify-center lg:items-start gap-6 pt-10 lg:pt-0 md:w-[70%] lg:w-full lg:h-full">
+          {/* NAME & POSITION */}
+          <div className="bellefair lg:mt-auto uppercase">
+            <span className="text-lg lg:text-[32px] text-white opacity-50">
+              {crew[activeTab].rank}
+            </span>
+            <h1 className="text-2xl lg:text-[56px] text-white mt-2">
+              {crew[activeTab].name}
+            </h1>
+          </div>
+
+          <p className="text-base leading-[180%] min-h-[120px]">
+            {crew[activeTab].description}
+          </p>
+
+          {/* TABS */}
+          <div className="flex justify-center lg:justify-start gap-4 w-full lg:mt-auto">
+            {Object.entries(crew).map(([key, member]) => {
+              const isActive = key === activeTab;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setActiveTab(key)}
+                  className={`cursor-pointer w-[10px] h-[10px] rounded-full transition-all bg-white ${
+                    !isActive && "opacity-[18%] hover:opacity-100"
+                  }`}
+                ></button>
+              );
+            })}
+          </div>
         </div>
 
-        <p className="text-base leading-[180%] min-h-[120px]">
-          {crew[activeTab].description}
-        </p>
-
-        {/* TABS */}
-        <div className="flex justify-center lg:justify-start gap-4 w-full lg:mt-auto">
-          {Object.entries(crew).map(([key, member]) => {
-            const isActive = key === activeTab;
-            return (
-              <button
-                key={key}
-                onClick={() => setActiveTab(key)}
-                className={`cursor-pointer w-[10px] h-[10px] rounded-full transition-all bg-white ${
-                  !isActive && "opacity-[18%] hover:opacity-100"
-                }`}
-              ></button>
-            );
-          })}
+        {/* CREW IMAGE */}
+        <div className="flex items-center justify-center pb-8 md:p-0">
+          <Image
+            width={272}
+            height={340}
+            src={`/assets/crew/image-${crew[activeTab].imgUrl}.png`}
+            alt={`Photo of crew member ${crew[activeTab].name}`}
+            quality={100}
+            className="fade-bottom object-cover md:w-auto md:h-[560px] lg:h-[676px]"
+          />
         </div>
-      </div>
-
-      <div className="flex items-center justify-center pb-8 md:p-0">
-        <Image
-          width={272}
-          height={340}
-          src={`/assets/crew/image-${crew[activeTab].imgUrl}.png`}
-          alt={`Photo of crew member ${crew[activeTab].name}`}
-          className="fade-bottom object-cover md:w-auto md:h-[560px] lg:h-[676px]"
-        />
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
