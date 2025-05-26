@@ -7,6 +7,7 @@ import Navigation from "./components/navigation";
 import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { ReactLenis, useLenis } from "lenis/react";
+import ParticlesBackground from "./components/particles";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
         <ReactLenis root />
         <Navigation />
         {children}
+        <ParticlesBackground />
       </body>
     </html>
   );
