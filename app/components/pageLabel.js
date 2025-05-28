@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { motion, useAnimation } from "framer-motion";
 
 function PageLabel({ pageNumber, label }) {
   return (

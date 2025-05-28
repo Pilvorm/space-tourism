@@ -6,8 +6,9 @@ import { barlow, barlowCondensed, bellefair } from "./fonts";
 import Navigation from "./components/navigation";
 import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { ReactLenis, useLenis } from "lenis/react";
+import { ReactLenis } from "lenis/react";
 import ParticlesBackground from "./components/particles";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
@@ -20,17 +21,15 @@ export default function RootLayout({ children }) {
     );
   }, [pathname]);
 
-  const lenis = useLenis((lenis) => {
-    // called every scroll
-    console.log(lenis);
-  });
-
   return (
     <html lang="en">
       <body className={bodyClass}>
         <ReactLenis root />
+
         <Navigation />
+
         {children}
+
         <ParticlesBackground />
       </body>
     </html>

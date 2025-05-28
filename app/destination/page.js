@@ -2,9 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useAnimation } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import PageLabel from "../components/pageLabel";
+import PageWrapper from "../components/pageWrapper";
+
+import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/SplitText";
+
+gsap.registerPlugin(SplitText);
 
 const destinations = {
   moon: {
@@ -39,6 +46,20 @@ const destinations = {
 
 export default function Destination() {
   const [activeTab, setActiveTab] = useState("moon");
+
+  const destinationName = useRef();
+
+  useGSAP(() => {
+    let split = SplitText.create(destinationName.current, {
+      type: "chars"
+    });
+
+    gsap.from(split.chars, {
+      y: 100,
+      autoAlpha: 0,
+      stagger: 0.05
+    })
+  })
 
   return (
     <div className="md:min-h-screen">
@@ -80,8 +101,8 @@ export default function Destination() {
             })}
           </div>
 
-          <h1 className="bellefair text-white text-[56px] md:text-[80px] lg:text-[96px] uppercase">
-            {activeTab}
+          <h1 ref={destinationName} className="bellefair text-white text-[56px] md:text-[80px] lg:text-[96px] uppercase">
+            {destinations[activeTab].name}
           </h1>
 
           <p className="barlow font-light text-center lg:text-left lg:text-lg leading-[180%] lg:min-h-[140px]">
@@ -93,7 +114,6 @@ export default function Destination() {
 
           {/* STATISTICS */}
           <div className="flex flex-col md:flex-row gap-6 uppercase w-full">
-            {/* DISTANCE */}
             <div className="flex flex-col gap-3 text-center lg:text-left w-full">
               <span className="barlow-condensed text-sm tracking-[2px]">
                 Avg. Distance
@@ -102,8 +122,6 @@ export default function Destination() {
                 {destinations[activeTab].averageDistance}
               </p>
             </div>
-
-            {/* TRAVEL TIME */}
             <div className="flex flex-col gap-3 text-center lg:text-left w-full">
               <span className="barlow-condensed text-sm tracking-[2px]">
                 Est. Travel Time
