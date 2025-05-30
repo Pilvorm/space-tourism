@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Logo from "@/public/assets/shared/logo.svg";
 import Menu from "@/public/assets/shared/icon-hamburger.svg";
 import { barlow, barlowCondensed } from "../fonts";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Offcanvas from "./offcanvas";
 
 const navLinks = [
   {
@@ -28,10 +30,12 @@ const navLinks = [
 
 const Navigation = ({}) => {
   const pathname = usePathname();
-  console.log(pathname);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="py-6 flex items-center justify-between">
+      {/* LOGO */}
       <div className="flex items-center px-6 md:px-10 gap-16 relative">
         <Image
           src={Logo}
@@ -41,10 +45,14 @@ const Navigation = ({}) => {
         <div className="horizontal-line hidden lg:block z-[99] absolute left-[112px] xl:left-[176px] bottom-[50%] w-[30vw] xl:w-[40vw] 2xl:w-[45vw] transition-all"></div>
       </div>
 
-      <button className="px-6 md:hidden">
+      {/* BURGER */}
+      <button className="px-6 md:hidden" onClick={() => setIsOpen(!isOpen)}>
         <Image src={Menu} width={24} height={21} alt="" />
       </button>
 
+      {/* <Offcanvas navLinks={navLinks} isOpen={isOpen} setIsOpen={setIsOpen} /> */}
+
+      {/* MENU LIST */}
       <ul className="hidden md:flex items-center justify-end gap-12 px-6 md:px-10 lg:px-16 w-auto lg:min-w-1/2 h-24 backdrop-blur-[80px] bg-white/5 relative">
         {navLinks.map((nav, idx) => {
           const isActive = pathname === nav.href;

@@ -30,6 +30,15 @@ body {
 .blue-main {
  color: $blue-main;
 }
+.blue-main-bg {
+  background-color: $blue-main;
+}
+.blue-accent {
+ color: $blue-accent;
+}
+.blue-accent-bg {
+  background-color: $blue-accent;
+}
 
 .home-page {
   background-image: url("../public/assets/home/background-home-mobile.jpg");

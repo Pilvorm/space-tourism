@@ -27,6 +27,18 @@ body {
   color: #0b0d17;
 }
 
+.blue-main-bg {
+  background-color: #0b0d17;
+}
+
+.blue-accent {
+  color: #d0d6f9;
+}
+
+.blue-accent-bg {
+  background-color: #d0d6f9;
+}
+
 .home-page {
   background-image: url("../public/assets/home/background-home-mobile.jpg");
 }

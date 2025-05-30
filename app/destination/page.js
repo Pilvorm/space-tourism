@@ -51,15 +51,18 @@ export default function Destination() {
 
   useGSAP(() => {
     let split = SplitText.create(destinationName.current, {
-      type: "chars"
+      type: "chars",
     });
 
     gsap.from(split.chars, {
-      y: 100,
+      y: 50,
       autoAlpha: 0,
-      stagger: 0.05
-    })
-  })
+      stagger: 0.05,
+      ease: "back.out(1.6)",
+      duration: 1,
+      delay: 0.05,
+    });
+  }, [activeTab]);
 
   return (
     <div className="md:min-h-screen">
@@ -101,7 +104,10 @@ export default function Destination() {
             })}
           </div>
 
-          <h1 ref={destinationName} className="bellefair text-white text-[56px] md:text-[80px] lg:text-[96px] uppercase">
+          <h1
+            ref={destinationName}
+            className="bellefair text-white text-[56px] md:text-[80px] lg:text-[96px] uppercase"
+          >
             {destinations[activeTab].name}
           </h1>
 
