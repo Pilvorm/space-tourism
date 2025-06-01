@@ -109,4 +109,8 @@ body {
 .fade-bottom {
   mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+}
+
+.hamburger-react div {
+  height: 2px !important;
 }/*# sourceMappingURL=style.css.map */

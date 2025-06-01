@@ -8,6 +8,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Offcanvas from "./offcanvas";
+import { TfiMenu } from "react-icons/tfi";
+import { VscMenu } from "react-icons/vsc";
+import { Fade as Hamburger } from "hamburger-react";
 
 const navLinks = [
   {
@@ -46,11 +49,14 @@ const Navigation = ({}) => {
       </div>
 
       {/* BURGER */}
-      <button className="px-6 md:hidden" onClick={() => setIsOpen(!isOpen)}>
-        <Image src={Menu} width={24} height={21} alt="" />
+      <button
+        className="px-6 md:hidden z-100"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <Hamburger toggled={isOpen} size={32} toggle={setIsOpen} direction="right"  />
       </button>
 
-      {/* <Offcanvas navLinks={navLinks} isOpen={isOpen} setIsOpen={setIsOpen} /> */}
+      <Offcanvas navLinks={navLinks} isOpen={isOpen} setIsOpen={setIsOpen} />
 
       {/* MENU LIST */}
       <ul className="hidden md:flex items-center justify-end gap-12 px-6 md:px-10 lg:px-16 w-auto lg:min-w-1/2 h-24 backdrop-blur-[80px] bg-white/5 relative">
