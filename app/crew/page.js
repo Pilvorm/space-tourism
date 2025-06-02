@@ -58,7 +58,7 @@ export default function Destination() {
               </h1>
             </div>
 
-            <p className="text-base leading-[180%] min-h-[120px]">
+            <p className="text-base leading-[180%] min-h-[180px] sm:min-h-[120px] transition-all">
               {crew[activeTab].description}
             </p>
 
@@ -80,7 +80,7 @@ export default function Destination() {
           </div>
 
           {/* CREW IMAGE */}
-          <div className="flex items-center justify-center pb-8 md:p-0">
+          <div className="flex items-center justify-center mt-8 pb-8 md:p-0">
             <Image
               width={272}
               height={340}

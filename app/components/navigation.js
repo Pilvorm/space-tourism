@@ -37,7 +37,7 @@ const Navigation = ({}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="py-6 flex items-center justify-between">
+    <nav className={`py-6 flex items-center justify-between ${isOpen ? "sticky top-0 transition-all" : ""}`}>
       {/* LOGO */}
       <div className="flex items-center px-6 md:px-10 gap-16 relative">
         <Image
@@ -50,7 +50,7 @@ const Navigation = ({}) => {
 
       {/* BURGER */}
       <button
-        className="px-6 md:hidden z-100"
+        className={`px-6 md:hidden z-[100]`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <Hamburger toggled={isOpen} size={32} toggle={setIsOpen} direction="right"  />
