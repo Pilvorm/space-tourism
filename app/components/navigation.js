@@ -2,14 +2,11 @@
 
 import { useState } from "react";
 import Logo from "@/public/assets/shared/logo.svg";
-import Menu from "@/public/assets/shared/icon-hamburger.svg";
-import { barlow, barlowCondensed } from "../fonts";
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Offcanvas from "./offcanvas";
-import { TfiMenu } from "react-icons/tfi";
-import { VscMenu } from "react-icons/vsc";
 import { Fade as Hamburger } from "hamburger-react";
 
 const navLinks = [
@@ -36,24 +33,45 @@ const Navigation = ({}) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   return (
-    <nav className={`py-6 flex items-center justify-between ${isOpen ? "sticky top-0 z-[50] transition-all" : ""}`}>
+    <nav
+      className={`py-6 flex items-center justify-between ${
+        isOpen ? "sticky top-0 z-[50] transition-all" : ""
+      }`}
+    >
       {/* LOGO */}
-      <div className="flex items-center px-6 md:px-10 gap-16 relative">
+      <Link href="/" className="flex items-center px-6 md:px-10 gap-16 relative">
         <Image
           src={Logo}
           className="w-10 h-10 md:w-12 md:h-12"
           alt="Space Tourism Logo"
         />
         <div className="horizontal-line hidden lg:block z-[99] absolute left-[112px] xl:left-[176px] bottom-[50%] w-[30vw] xl:w-[40vw] 2xl:w-[45vw] transition-all"></div>
-      </div>
+      </Link>
 
       {/* BURGER */}
       <button
         className={`px-6 md:hidden z-[10000]`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Hamburger toggled={isOpen} size={32} toggle={setIsOpen} direction="right"  />
+        <Hamburger
+          toggled={isOpen}
+          size={32}
+          toggle={setIsOpen}
+          direction="right"
+        />
       </button>
 
       <Offcanvas navLinks={navLinks} isOpen={isOpen} setIsOpen={setIsOpen} />
