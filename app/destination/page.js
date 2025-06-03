@@ -65,7 +65,7 @@ export default function Destination() {
   }, [activeTab]);
 
   return (
-    <div className="md:min-h-screen">
+    <div className="md:min-h-screen z-0">
       {/* HEADER */}
       <PageLabel pageNumber={1} label={"Pick Your Destination"} />
 
