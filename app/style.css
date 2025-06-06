@@ -21,6 +21,7 @@ body {
   background-attachment: fixed;
   background-color: #0b0d17;
   color: #d0d6f9;
+  transition: background-image 0.75s ease-in-out, background-color 0.75s ease-in-out;
 }
 
 .blue-main {
@@ -100,12 +101,6 @@ body {
   background-color: rgba(255, 255, 255, 0.25);
 }
 
-.circle {
-  position: absolute;
-  transform: scale(0);
-  transition: all 0.3s ease;
-}
-
 .fade-bottom {
   mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
@@ -113,4 +108,60 @@ body {
 
 .hamburger-react div {
   height: 2px !important;
+}
+
+.explore-btn {
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.explore-btn:hover {
+  box-shadow: 0 0 40px 10px rgba(255, 255, 255, 0.5);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.explore-btn::before,
+.explore-btn::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 40%;
+  z-index: -1;
+  animation-name: sun;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.explore-btn:hover::before,
+.explore-btn:hover::after {
+  opacity: 1;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.explore-btn::before {
+  width: 70%;
+  height: 70%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  box-shadow: 40px 0 90px #fff;
+  animation-duration: 30s;
+}
+
+.explore-btn::after {
+  width: 74%;
+  height: 74%;
+  transform: translate(-50%, -50%) rotate(50deg);
+  box-shadow: 0px -40px 90px rgb(202, 251, 251);
+  animation-duration: 40s;
+}
+
+@keyframes sun {
+  from {
+    transform: translate(-50%, -50%) rotate(-30deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(700deg);
+  }
 }/*# sourceMappingURL=style.css.map */

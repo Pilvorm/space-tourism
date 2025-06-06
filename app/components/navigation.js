@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Offcanvas from "./offcanvas";
 import { Fade as Hamburger } from "hamburger-react";
+import { motion } from "motion/react";
 
 const navLinks = [
   {
@@ -52,12 +53,20 @@ const Navigation = ({}) => {
       }`}
     >
       {/* LOGO */}
-      <Link href="/" className="flex items-center px-6 md:px-10 gap-16 relative">
-        <Image
-          src={Logo}
-          className="w-10 h-10 md:w-12 md:h-12"
-          alt="Space Tourism Logo"
-        />
+      <Link
+        href="/"
+        className="flex items-center px-6 md:px-10 gap-16 relative"
+      >
+        <motion.div
+          whileHover={{ rotate: 180 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+        >
+          <Image
+            src={Logo}
+            className="w-10 h-10 md:w-12 md:h-12"
+            alt="Space Tourism Logo"
+          />
+        </motion.div>
         <div className="horizontal-line hidden lg:block z-[99] absolute left-[112px] xl:left-[176px] bottom-[50%] w-[30vw] xl:w-[40vw] 2xl:w-[45vw] transition-all"></div>
       </Link>
 
