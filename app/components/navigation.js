@@ -58,6 +58,8 @@ const Navigation = ({}) => {
         className="flex items-center px-6 md:px-10 gap-16 relative"
       >
         <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           whileHover={{ rotate: 180 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
         >
