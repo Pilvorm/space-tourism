@@ -8,8 +8,9 @@ import PageWrapper from "../components/pageWrapper";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
+import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 
-gsap.registerPlugin(SplitText);
+gsap.registerPlugin(SplitText, ScrambleTextPlugin);
 
 const destinations = {
   moon: {
@@ -45,20 +46,47 @@ const destinations = {
 export default function Destination() {
   const [activeTab, setActiveTab] = useState("moon");
 
-  const destinationName = useRef();
+  const scrambleTextConfig = {
+    chars: "0123456789KMBIL.",
+    revealDelay: 0.2,
+    tweenLength: false,
+    speed: 1,
+  };
 
   useGSAP(() => {
-    let split = SplitText.create(destinationName.current, {
-      type: "chars",
-    });
+    document.fonts.ready.then(() => {
+      let split = SplitText.create(".destination-name", {
+        type: "chars",
+      });
 
-    gsap.from(split.chars, {
-      y: 50,
-      autoAlpha: 0,
-      stagger: 0.05,
-      ease: "back.out(1.6)",
-      duration: 1,
-      delay: 0.05,
+      gsap.from(split.chars, {
+        y: 50,
+        autoAlpha: 0,
+        stagger: 0.05,
+        ease: "back.out(1.6)",
+        duration: 1,
+        delay: 0.05,
+      });
+
+      gsap.to(".destination-distance", {
+        scrambleText: {
+          text: destinations[activeTab].averageDistance,
+          ...scrambleTextConfig
+        },
+        ease: "back.out(1.6)",
+        overwrite: "auto",
+        duration: 3,
+      });
+
+      gsap.to(".destination-travel-time", {
+        scrambleText: {
+          text: destinations[activeTab].travelTime,
+          ...scrambleTextConfig
+        },
+        ease: "back.out(1.6)",
+        overwrite: "auto",
+        duration: 3,
+      });
     });
   }, [activeTab]);
 
@@ -103,10 +131,7 @@ export default function Destination() {
               })}
             </div>
 
-            <h1
-              ref={destinationName}
-              className="bellefair text-white text-[56px] md:text-[80px] lg:text-[96px] uppercase"
-            >
+            <h1 className="destination-name bellefair text-white text-[56px] md:text-[80px] lg:text-[96px] uppercase">
               {destinations[activeTab].name}
             </h1>
 
@@ -123,7 +148,7 @@ export default function Destination() {
                 <span className="barlow-condensed text-sm tracking-[2px]">
                   Avg. Distance
                 </span>
-                <p className="bellefair text-white text-[28px]">
+                <p className="destination-distance bellefair text-white text-[28px]">
                   {destinations[activeTab].averageDistance}
                 </p>
               </div>
@@ -131,7 +156,7 @@ export default function Destination() {
                 <span className="barlow-condensed text-sm tracking-[2px]">
                   Est. Travel Time
                 </span>
-                <p className="bellefair text-white text-[28px]">
+                <p className="destination-travel-time bellefair text-white text-[28px]">
                   {destinations[activeTab].travelTime}
                 </p>
               </div>

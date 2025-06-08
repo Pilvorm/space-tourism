@@ -14,39 +14,41 @@ export default function Home() {
   useGSAP(() => {
     if (animationFlags.hasRunSpaceIntro) return;
 
-    let splitIntro = SplitText.create(".split-intro", { type: "words" });
-    let splitHeading = SplitText.create(".split-heading");
-    let splitDesc = SplitText.create(".split-description", {
-      type: "lines",
-      // autoSplit: true,
-    });
-
-    gsap
-      .timeline({ delay: 1 })
-      .from(splitIntro.words, {
-        opacity: 0,
-        duration: 1,
-        ease: "sine.out",
-        stagger: (i) => {
-          if (i === 0) return 0; // Instant
-          if (i === 1) return 1.2; // pause after first word
-          return 1.2 + (i - 1) * 0.2; // continue with 0.2s stagger
+    document.fonts.ready.then(() => {
+      let splitIntro = SplitText.create(".split-intro", { type: "words" });
+      let splitHeading = SplitText.create(".split-heading");
+      let splitDesc = SplitText.create(".split-description", {
+        type: "lines",
+        autoSplit: true,
+        onSplit: (self) => {
+          let tl = gsap.timeline();
+          tl.from(splitIntro.words, {
+            opacity: 0,
+            duration: 1,
+            ease: "sine.out",
+            stagger: (i) => {
+              if (i === 0) return 0; // Instant
+              if (i === 1) return 1.2; // pause after first word
+              return 1.2 + (i - 1) * 0.2; // continue with 0.2s stagger
+            },
+          }).from(splitHeading.chars, {
+            duration: 1,
+            opacity: 0,
+            ease: "power1.inOut",
+            stagger: { from: "center", each: 0.02 },
+          });
+          tl.from(self.lines, {
+            opacity: 0,
+            y: "10px",
+            duration: 0.6,
+            ease: "sine.inOut",
+            stagger: 0.2,
+            delay: 0.5,
+          });
+          return tl;
         },
-      })
-      .from(splitHeading.chars, {
-        duration: 1,
-        opacity: 0,
-        ease: "power1.inOut",
-        stagger: { from: "center", each: 0.02 },
-      })
-      .from(splitDesc.lines, {
-        opacity: 0,
-        y: "10px",
-        duration: 0.6,
-        ease: "sine.inOut",
-        stagger: 0.2,
-        delay: 0.5,
       });
+    });
 
     animationFlags.hasRunSpaceIntro = true;
   });
@@ -60,7 +62,7 @@ export default function Home() {
             <p className="split split-intro uppercase barlow-condensed text-base md:text-[28px] tracking-[4px]">
               So, You Want to Travel To
             </p>
-            <h1 className="split split-heading bellefair text-white text-[80px] md:text-[144px] leading-none">
+            <h1 className="split split-heading intro-heading bellefair text-center lg:text-left text-white text-[80px] md:text-[144px] leading-none">
               SPACE
             </h1>
             <p className="split split-description max-w-xl barlow font-light text-base leading-[180%]">

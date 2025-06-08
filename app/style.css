@@ -113,6 +113,10 @@ body {
   height: 2px !important;
 }
 
+.intro-heading > div {
+  text-align: inherit !important;
+}
+
 .explore-btn {
   position: relative;
   transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
