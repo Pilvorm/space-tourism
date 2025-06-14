@@ -5,27 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import PageLabel from "../components/pageLabel";
 import PageWrapper from "../components/pageWrapper";
-
-const technologies = {
-  launch: {
-    name: "Launch Vehicle",
-    description:
-      "A launch vehicle or carrier rocket is a rocket-propelled vehicle used to carry a payload from Earth's surface to space, usually to Earth orbit or beyond. Our WEB-X carrier rocket is the most powerful in operation. Standing 150 metres tall, it's quite an awe-inspiring sight on the launch pad!",
-    imgUrl: "launch-vehicle",
-  },
-  spaceport: {
-    name: "Spaceport",
-    description:
-      "A spaceport or cosmodrome is a site for launching (or receiving) spacecraft, by analogy to the seaport for ships or airport for aircraft. Based in the famous Cape Canaveral, our spaceport is ideally situated to take advantage of the Earth’s rotation for launch.",
-    imgUrl: "spaceport",
-  },
-  capsule: {
-    name: "Space Capsule",
-    description:
-      "A space capsule is an often-crewed spacecraft that uses a blunt-body reentry capsule to reenter the Earth's atmosphere without wings. Our capsule is where you'll spend your time during the flight. It includes a space gym, cinema, and plenty of other activities to keep you entertained.",
-    imgUrl: "space-capsule",
-  },
-};
+import { TECHNOLOGIES } from "../data";
 
 export default function Destination() {
   const [activeTab, setActiveTab] = useState("launch");
@@ -41,7 +21,7 @@ export default function Destination() {
           <div className="flex items-center justify-center relative w-full h-[258px] md:h-[357px] lg:h-[500px] lg:w-[500px] xl:h-[600px] xl:w-[600px] tech-img">
             <Image
               fill
-              src={`/assets/technology/image-${technologies[activeTab].imgUrl}-portrait.jpg`}
+              src={`/assets/technology/image-${TECHNOLOGIES[activeTab].imgUrl}-portrait.jpg`}
               alt="PLANET"
               quality={100}
               className="object-cover object-bottom"
@@ -52,7 +32,7 @@ export default function Destination() {
           <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 px-6 pt-8 pb-12 md:px-10 md:pb-10 xl:p-0 lg:w-1/2">
             {/* TABS */}
             <div className="flex lg:flex-col justify-center gap-4 lg:gap-8 w-full lg:w-fit">
-              {Object.entries(technologies).map(([key, tech], index) => {
+              {Object.entries(TECHNOLOGIES).map(([key, tech], index) => {
                 const isActive = key === activeTab;
                 return (
                   <button
@@ -77,12 +57,12 @@ export default function Destination() {
                   THE TERMINOLOGY...
                 </span>
                 <h1 className="text-2xl md:text-[40px] lg:text-[56px] text-white">
-                  {technologies[activeTab].name}
+                  {TECHNOLOGIES[activeTab].name}
                 </h1>
               </div>
 
               <p className="text-center lg:text-left text-base lg:text-lg leading-[180%] md:w-[70%] lg:w-full md:self-center lg:self-start">
-                {technologies[activeTab].description}
+                {TECHNOLOGIES[activeTab].description}
               </p>
             </div>
           </div>

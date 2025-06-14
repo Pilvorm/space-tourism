@@ -2,49 +2,40 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import PageLabel from "../components/pageLabel";
 import PageWrapper from "../components/pageWrapper";
+import { motion } from "motion/react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
+import Draggable from "gsap/Draggable";
+import InertiaPlugin from "gsap/InertiaPlugin";
+import { DESTINATIONS } from "../data";
 
-gsap.registerPlugin(SplitText, ScrambleTextPlugin);
-
-const destinations = {
-  moon: {
-    name: "Moon",
-    description:
-      "See our planet as you’ve never seen it before. A perfect relaxing trip away to help regain perspective and come back refreshed. While you’re there, take in some history by visiting the Luna 2 and Apollo 11 landing sites.",
-    averageDistance: "384,400 km",
-    travelTime: "3 Days",
-  },
-  mars: {
-    name: "Mars",
-    description:
-      "Don’t forget to pack your hiking boots. You’ll need them to tackle Olympus Mons, the tallest planetary mountain in our solar system. It’s two and a half times the size of Everest!",
-    averageDistance: "225 Mil. km",
-    travelTime: "9 months",
-  },
-  europa: {
-    name: "Europa",
-    description:
-      "The smallest of the four Galilean moons orbiting Jupiter, Europa is a winter lover’s dream. With an icy surface, it’s perfect for a bit of ice skating, curling, hockey, or simple relaxation in your snug wintery cabin.",
-    averageDistance: "628 Mil. km",
-    travelTime: "3 years",
-  },
-  titan: {
-    name: "Titan",
-    description:
-      "The only moon known to have a dense atmosphere other than Earth, Titan is a home away from home (just a few hundred degrees colder!). As a bonus, you get striking views of the Rings of Saturn.",
-    averageDistance: "1.6 Bil. km",
-    travelTime: "7 years",
-  },
-};
+gsap.registerPlugin(SplitText, ScrambleTextPlugin, Draggable, InertiaPlugin);
 
 export default function Destination() {
   const [activeTab, setActiveTab] = useState("moon");
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    gsap.set(
+      [
+        ".destination-image",
+        ".destination-name",
+        ".destination-description",
+        ".destination-stats",
+      ],
+      {
+        autoAlpha: 0,
+      }
+    );
+
+    setIsMounted(true);
+  }, []);
 
   const scrambleTextConfig = {
     chars: "0123456789KMBIL.",
@@ -53,42 +44,159 @@ export default function Destination() {
     speed: 1,
   };
 
-  useGSAP(() => {
+  const animateIn = () => {
+    if (!isMounted) return;
+    setIsAnimating(true);
+
     document.fonts.ready.then(() => {
-      let split = SplitText.create(".destination-name", {
-        type: "chars",
-      });
+      gsap.delayedCall(0.1, () => {
+        const tl = gsap.timeline({
+          onComplete: () => {
+            setIsAnimating(false);
+          },
+        });
 
-      gsap.from(split.chars, {
-        y: 50,
-        autoAlpha: 0,
-        stagger: 0.05,
-        ease: "back.out(1.6)",
-        duration: 1,
-        delay: 0.05,
-      });
+        tl.fromTo(
+          ".destination-image",
+          { autoAlpha: 0, scale: 0.8 },
+          { autoAlpha: 1, scale: 1, duration: 0.8, ease: "back.out(1.6)" }
+        )
+          .fromTo(
+            ".destination-name",
+            { autoAlpha: 0, y: 30 },
+            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" },
+            "-=0.4"
+          )
+          .fromTo(
+            ".destination-description",
+            { autoAlpha: 0, y: 30 },
+            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" },
+            "-=0.4"
+          )
+          .fromTo(
+            ".destination-stats",
+            { autoAlpha: 0, y: 20 },
+            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" },
+            "-=0.4"
+          );
 
-      gsap.to(".destination-distance", {
-        scrambleText: {
-          text: destinations[activeTab].averageDistance,
-          ...scrambleTextConfig
-        },
-        ease: "back.out(1.6)",
-        overwrite: "auto",
-        duration: 3,
-      });
+        gsap.to(".destination-distance", {
+          scrambleText: {
+            text: DESTINATIONS[activeTab].averageDistance,
+            ...scrambleTextConfig,
+          },
+          ease: "back.out(1.6)",
+          overwrite: "auto",
+          duration: 2,
+          delay: 0.8,
+        });
 
-      gsap.to(".destination-travel-time", {
-        scrambleText: {
-          text: destinations[activeTab].travelTime,
-          ...scrambleTextConfig
-        },
-        ease: "back.out(1.6)",
-        overwrite: "auto",
-        duration: 3,
+        gsap.to(".destination-travel-time", {
+          scrambleText: {
+            text: DESTINATIONS[activeTab].travelTime,
+            ...scrambleTextConfig,
+          },
+          ease: "back.out(1.6)",
+          overwrite: "auto",
+          duration: 2,
+          delay: 1,
+        });
       });
     });
-  }, [activeTab]);
+  };
+
+  const animateOut = (callback) => {
+    setIsAnimating(true);
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setIsAnimating(false);
+        callback();
+      },
+    });
+
+    tl.to(".destination-image", {
+      autoAlpha: 0,
+      scale: 0.8,
+      duration: 0.4,
+      ease: "power2.in",
+    })
+      .to(
+        ".destination-name",
+        {
+          autoAlpha: 0,
+          y: -20,
+          duration: 0.3,
+          ease: "power2.in",
+        },
+        "-=0.3"
+      )
+      .to(
+        ".destination-description",
+        {
+          autoAlpha: 0,
+          y: -20,
+          duration: 0.3,
+          ease: "power2.in",
+        },
+        "-=0.3"
+      )
+      .to(
+        ".destination-stats",
+        {
+          autoAlpha: 0,
+          y: -15,
+          duration: 0.3,
+          ease: "power2.in",
+        },
+        "-=0.2"
+      );
+  };
+
+  const handleTabClick = (newTab) => {
+    if (newTab === activeTab || isAnimating) return;
+
+    animateOut(() => {
+      setActiveTab(newTab);
+    });
+  };
+
+  useGSAP(() => {
+    if (!isAnimating && isMounted) {
+      animateIn();
+    }
+
+    // Enhanced GSAP Draggable configuration for space-like floating effect
+    Draggable.create(".destination-image", {
+      type: "x,y",
+      bounds: document.getElementById("destination-image"),
+      inertia: true,
+      throwResistance: 5,
+      edgeResistance: 0.05,
+      maxDuration: 30,
+      minDuration: 1,
+      overshootTolerance: 0.1,
+      throwProps: {
+        resistance: 5,
+        ease: "power1.out",
+      },
+    });
+
+    let ambientSpin;
+
+    function startAmbientSpin() {
+      const element = document.querySelector(".destination-image");
+      if (!element) return;
+
+      ambientSpin = gsap.to(element, {
+        rotation: "+=360",
+        duration: 60,
+        ease: "none",
+        repeat: -1,
+      });
+    }
+    startAmbientSpin();
+  }, [activeTab, isMounted]);
 
   return (
     <PageWrapper>
@@ -98,45 +206,55 @@ export default function Destination() {
 
         <main className="flex flex-col items-center justify-center lg:grid lg:grid-cols-2 gap-8 p-6 md:p-10 lg:py-12 xl:px-32">
           {/* PLANET IMAGE */}
-          <div className="flex items-center justify-center py-16 lg:py-32">
+          <div
+            id="destination-image"
+            className="flex items-center justify-center py-16 lg:py-32 w-full"
+          >
             <Image
               width={150}
               height={150}
               src={`/assets/destination/image-${activeTab}.png`}
-              alt={`Photo of ${destinations[activeTab].name}`}
+              alt={`Photo of ${DESTINATIONS[activeTab].name}`}
               quality={100}
-              className="md:w-[300px] md:h-[300px] lg:w-[480px] lg:h-[480px]"
+              className="destination-image md:w-[300px] md:h-[300px] lg:w-[480px] lg:h-[480px]"
+              priority
             />
           </div>
 
           {/* EXPLANATION */}
           <div className="flex flex-col items-center justify-center lg:items-start gap-6 md:w-[70%]">
             {/* TABS */}
-            <div className="flex justify-evenly md:justify-center lg:justify-start md:gap-8 w-full">
-              {Object.entries(destinations).map(([key, destination]) => {
+            <div className="relative flex w-full justify-evenly md:justify-center md:gap-8 lg:justify-start">
+              {Object.entries(DESTINATIONS).map(([key, destination]) => {
                 const isActive = key === activeTab;
                 return (
                   <button
                     key={key}
-                    onClick={() => setActiveTab(key)}
-                    className={`cursor-pointer barlow-condensed text-sm text-center uppercase tracking-[4px] pb-3 border-b-2 transition-all ${
-                      isActive
-                        ? "border-white text-white"
-                        : "border-transparent hover:border-white"
+                    onClick={() => handleTabClick(key)}
+                    disabled={isAnimating}
+                    className={`relative cursor-pointer pb-3 text-center text-sm uppercase tracking-[4px] barlow-condensed transition-colors ${
+                      isActive ? "text-white" : "blue-accent"
                     }`}
                   >
                     {destination.name}
+                    {isActive && (
+                      <motion.div
+                        layoutId="underline"
+                        className="absolute -bottom-1 left-0 h-[2px] w-full bg-white"
+                        transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+                      />
+                    )}
                   </button>
                 );
               })}
             </div>
 
             <h1 className="destination-name bellefair text-white text-[56px] md:text-[80px] lg:text-[96px] uppercase">
-              {destinations[activeTab].name}
+              {DESTINATIONS[activeTab].name}
             </h1>
 
-            <p className="barlow font-light text-center lg:text-left lg:text-lg leading-[180%] lg:min-h-[140px]">
-              {destinations[activeTab].description}
+            <p className="destination-description barlow font-light text-center lg:text-left lg:text-lg leading-[180%] lg:min-h-[140px]">
+              {DESTINATIONS[activeTab].description}
             </p>
 
             {/* SEPARATOR */}
@@ -148,16 +266,16 @@ export default function Destination() {
                 <span className="barlow-condensed text-sm tracking-[2px]">
                   Avg. Distance
                 </span>
-                <p className="destination-distance bellefair text-white text-[28px]">
-                  {destinations[activeTab].averageDistance}
+                <p className="destination-stats destination-distance bellefair text-white text-[28px]">
+                  {DESTINATIONS[activeTab].averageDistance}
                 </p>
               </div>
               <div className="flex flex-col gap-3 text-center lg:text-left w-full">
                 <span className="barlow-condensed text-sm tracking-[2px]">
                   Est. Travel Time
                 </span>
-                <p className="destination-travel-time bellefair text-white text-[28px]">
-                  {destinations[activeTab].travelTime}
+                <p className="destination-stats destination-travel-time bellefair text-white text-[28px]">
+                  {DESTINATIONS[activeTab].travelTime}
                 </p>
               </div>
             </div>

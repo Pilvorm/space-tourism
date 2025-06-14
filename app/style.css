@@ -25,6 +25,7 @@ body {
   background-attachment: fixed;
   background-color: #0b0d17;
   color: #d0d6f9;
+  overflow: hidden;
 }
 
 .blue-main {
@@ -102,6 +103,7 @@ body {
 .horizontal-line {
   height: 1.5px;
   background-color: rgba(255, 255, 255, 0.25);
+  transition: all 0.125s ease-in-out;
 }
 
 .fade-bottom {
