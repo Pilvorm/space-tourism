@@ -44,7 +44,11 @@ export default function Home() {
             ease: "sine.inOut",
             stagger: 0.2,
             delay: 0.5,
-          });
+          }).fromTo(
+            ".explore-btn",
+            { autoAlpha: 0, y: 50 },
+            { autoAlpha: 1, y: 0, duration: 1.2, ease: "power2.out", delay: 0.5 },
+          );
           return tl;
         },
       });
