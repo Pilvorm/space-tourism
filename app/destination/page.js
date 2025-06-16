@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import PageLabel from "../components/pageLabel";
 import PageWrapper from "../components/pageWrapper";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
@@ -17,156 +17,34 @@ import { DESTINATIONS } from "../data";
 gsap.registerPlugin(SplitText, ScrambleTextPlugin, Draggable, InertiaPlugin);
 
 export default function Destination() {
-  const [activeTab, setActiveTab] = useState("moon");
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const [activeTab, setActiveTab] = useState(Object.keys(DESTINATIONS)[0]);
 
-  useEffect(() => {
-    gsap.set(
-      [
-        ".destination-image",
-        ".destination-name",
-        ".destination-description",
-        ".destination-stats",
-      ],
-      {
-        autoAlpha: 0,
-      }
-    );
-
-    setIsMounted(true);
-  }, []);
-
-  const scrambleTextConfig = {
-    chars: "0123456789KMBIL.",
-    revealDelay: 0.2,
-    tweenLength: false,
-    speed: 1,
-  };
-
-  const animateIn = () => {
-    if (!isMounted) return;
-    setIsAnimating(true);
-
-    document.fonts.ready.then(() => {
-      gsap.delayedCall(0.1, () => {
-        const tl = gsap.timeline({
-          onComplete: () => {
-            setIsAnimating(false);
-          },
-        });
-
-        tl.fromTo(
-          ".destination-image",
-          { autoAlpha: 0, scale: 0.8 },
-          { autoAlpha: 1, scale: 1, duration: 0.8, ease: "back.out(1.6)" }
-        )
-          .fromTo(
-            ".destination-name",
-            { autoAlpha: 0, y: 30 },
-            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" },
-            "-=0.4"
-          )
-          .fromTo(
-            ".destination-description",
-            { autoAlpha: 0, y: 30 },
-            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" },
-            "-=0.4"
-          )
-          .fromTo(
-            ".destination-stats",
-            { autoAlpha: 0, y: 20 },
-            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" },
-            "-=0.4"
-          );
-
-        gsap.to(".destination-distance", {
-          scrambleText: {
-            text: DESTINATIONS[activeTab].averageDistance,
-            ...scrambleTextConfig,
-          },
-          ease: "back.out(1.6)",
-          overwrite: "auto",
-          duration: 2,
-          delay: 0.8,
-        });
-
-        gsap.to(".destination-travel-time", {
-          scrambleText: {
-            text: DESTINATIONS[activeTab].travelTime,
-            ...scrambleTextConfig,
-          },
-          ease: "back.out(1.6)",
-          overwrite: "auto",
-          duration: 2,
-          delay: 1,
-        });
-      });
-    });
-  };
-
-  const animateOut = (callback) => {
-    setIsAnimating(true);
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setIsAnimating(false);
-        callback();
+  const variants = {
+    initial: ({ y = 20 } = {}) => ({
+      opacity: 0,
+      y: y,
+    }),
+    animate: ({ animateDelay = 0 } = {}) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94], // power2.out
+        delay: animateDelay,
       },
-    });
-
-    tl.to(".destination-image", {
-      autoAlpha: 0,
-      scale: 0.8,
-      duration: 0.4,
-      ease: "power2.in",
-    })
-      .to(
-        ".destination-name",
-        {
-          autoAlpha: 0,
-          y: -20,
-          duration: 0.3,
-          ease: "power2.in",
-        },
-        "-=0.3"
-      )
-      .to(
-        ".destination-description",
-        {
-          autoAlpha: 0,
-          y: -20,
-          duration: 0.3,
-          ease: "power2.in",
-        },
-        "-=0.3"
-      )
-      .to(
-        ".destination-stats",
-        {
-          autoAlpha: 0,
-          y: -15,
-          duration: 0.3,
-          ease: "power2.in",
-        },
-        "-=0.2"
-      );
-  };
-
-  const handleTabClick = (newTab) => {
-    if (newTab === activeTab || isAnimating) return;
-
-    animateOut(() => {
-      setActiveTab(newTab);
-    });
+    }),
+    exit: ({ y = 20, exitDelay = 0.05 } = {}) => ({
+      opacity: 0,
+      y: -y,
+      transition: {
+        duration: 0.3,
+        ease: [0.55, 0.085, 0.68, 0.53], // power2.in
+        delay: exitDelay,
+      },
+    }),
   };
 
   useGSAP(() => {
-    if (!isAnimating && isMounted) {
-      animateIn();
-    }
-
-    // Enhanced GSAP Draggable configuration for space-like floating effect
     Draggable.create(".destination-image", {
       type: "x,y",
       bounds: document.getElementById("destination-image"),
@@ -182,21 +60,17 @@ export default function Destination() {
       },
     });
 
-    let ambientSpin;
-
     function startAmbientSpin() {
-      const element = document.querySelector(".destination-image");
-      if (!element) return;
-
-      ambientSpin = gsap.to(element, {
+      gsap.to(".destination-image", {
         rotation: "+=360",
         duration: 60,
         ease: "none",
         repeat: -1,
       });
     }
+
     startAmbientSpin();
-  }, [activeTab, isMounted]);
+  }, []);
 
   return (
     <PageWrapper>
@@ -230,8 +104,7 @@ export default function Destination() {
                 return (
                   <button
                     key={key}
-                    onClick={() => handleTabClick(key)}
-                    disabled={isAnimating}
+                    onClick={() => setActiveTab(key)}
                     className={`relative cursor-pointer pb-3 text-center text-sm uppercase tracking-[4px] barlow-condensed transition-colors ${
                       isActive ? "text-white" : "blue-accent"
                     }`}
@@ -249,13 +122,31 @@ export default function Destination() {
               })}
             </div>
 
-            <h1 className="destination-name bellefair text-white text-[56px] md:text-[80px] lg:text-[96px] uppercase">
-              {DESTINATIONS[activeTab].name}
-            </h1>
+            <AnimatePresence mode="wait">
+              <motion.h1
+                key={DESTINATIONS[activeTab].name}
+                variants={variants}
+                custom={{ y: 30, animateDelay: 0.1, exitDelay: 0.1 }}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="destination-name bellefair text-white text-[56px] md:text-[80px] lg:text-[96px] uppercase"
+              >
+                {DESTINATIONS[activeTab].name}
+              </motion.h1>
 
-            <p className="destination-description barlow font-light text-center lg:text-left lg:text-lg leading-[180%] lg:min-h-[140px]">
-              {DESTINATIONS[activeTab].description}
-            </p>
+              <motion.p
+                key={DESTINATIONS[activeTab].description}
+                variants={variants}
+                custom={{ y: 30, animateDelay: 0.3, exitDelay: 0.3 }}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="destination-description barlow font-light text-center lg:text-left lg:text-lg leading-[180%] lg:min-h-[140px]"
+              >
+                {DESTINATIONS[activeTab].description}
+              </motion.p>
+            </AnimatePresence>
 
             {/* SEPARATOR */}
             <div className="horizontal-line w-full"></div>
@@ -263,20 +154,36 @@ export default function Destination() {
             {/* STATISTICS */}
             <div className="flex flex-col md:flex-row gap-6 uppercase w-full">
               <div className="flex flex-col gap-3 text-center lg:text-left w-full">
-                <span className="barlow-condensed text-sm tracking-[2px]">
+                <div className="barlow-condensed text-sm tracking-[2px]">
                   Avg. Distance
-                </span>
-                <p className="destination-stats destination-distance bellefair text-white text-[28px]">
+                </div>
+                <motion.p
+                  key={DESTINATIONS[activeTab].averageDistance}
+                  variants={variants}
+                  custom={{ y: 30, animateDelay: 0.3, exitDelay: 0.3 }}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="destination-stats destination-distance bellefair text-white text-[28px]"
+                >
                   {DESTINATIONS[activeTab].averageDistance}
-                </p>
+                </motion.p>
               </div>
               <div className="flex flex-col gap-3 text-center lg:text-left w-full">
-                <span className="barlow-condensed text-sm tracking-[2px]">
+                <div className="barlow-condensed text-sm tracking-[2px]">
                   Est. Travel Time
-                </span>
-                <p className="destination-stats destination-travel-time bellefair text-white text-[28px]">
+                </div>
+                <motion.p
+                  key={DESTINATIONS[activeTab].description}
+                  variants={variants}
+                  custom={{ y: 30, animateDelay: 0.3, exitDelay: 0.3 }}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="destination-stats destination-travel-time bellefair text-white text-[28px]"
+                >
                   {DESTINATIONS[activeTab].travelTime}
-                </p>
+                </motion.p>
               </div>
             </div>
           </div>

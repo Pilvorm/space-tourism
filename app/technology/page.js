@@ -8,7 +8,7 @@ import PageWrapper from "../components/pageWrapper";
 import { TECHNOLOGIES } from "../data";
 
 export default function Destination() {
-  const [activeTab, setActiveTab] = useState("launch");
+  const [activeTab, setActiveTab] = useState(Object.keys(TECHNOLOGIES)[0]);
 
   return (
     <PageWrapper>

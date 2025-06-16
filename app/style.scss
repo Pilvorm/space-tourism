@@ -13,10 +13,20 @@ $blue-accent: #d0d6f9;
 
 /* Thumb */
 ::-webkit-scrollbar-thumb {
-  background-color: $blue-accent; /* Tailwind blue-700 */
+  background-color: $blue-accent;
   border-radius: 8px;
   border: 4px solid transparent;
   background-clip: content-box;
+}
+
+::selection {
+  color: $blue-main;
+  background: $blue-accent;
+}
+
+::-moz-selection {
+  color: $blue-main;
+  background: $blue-accent;
 }
 
 .split * {
@@ -166,7 +176,7 @@ body {
   animation-duration: 30s;
 }
 
-.explore-btn::after { 
+.explore-btn::after {
   width: 74%;
   height: 74%;
   transform: translate(-50%, -50%) rotate(50deg);
