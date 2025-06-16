@@ -44,6 +44,13 @@ export default function Destination() {
     }),
   };
 
+  const scrambleTextConfig = {
+    chars: "0123456789KMBIL.",
+    revealDelay: 0.2,
+    tweenLength: false,
+    speed: 1,
+  };
+
   useGSAP(() => {
     Draggable.create(".destination-image", {
       type: "x,y",
@@ -71,6 +78,32 @@ export default function Destination() {
 
     startAmbientSpin();
   }, []);
+
+  // useGSAP(() => {
+  //   gsap.delayedCall(0.5, () => {
+  //     gsap.to(".destination-distance", {
+  //       scrambleText: {
+  //         text: DESTINATIONS[activeTab].averageDistance,
+  //         ...scrambleTextConfig,
+  //       },
+  //       ease: "back.out(1.6)",
+  //       overwrite: "auto",
+  //       duration: 2,
+  //       delay: 0.8,
+  //     });
+
+  //     gsap.to(".destination-travel-time", {
+  //       scrambleText: {
+  //         text: DESTINATIONS[activeTab].travelTime,
+  //         ...scrambleTextConfig,
+  //       },
+  //       ease: "back.out(1.6)",
+  //       overwrite: "auto",
+  //       duration: 2,
+  //       delay: 0.8,
+  //     });
+  //   });
+  // }, [activeTab]);
 
   return (
     <PageWrapper>
@@ -122,6 +155,7 @@ export default function Destination() {
               })}
             </div>
 
+            {/* SOLUTION 2: Separate AnimatePresence with fixed heights */}
             <AnimatePresence mode="wait">
               <motion.h1
                 key={DESTINATIONS[activeTab].name}
@@ -142,7 +176,7 @@ export default function Destination() {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className="destination-description barlow font-light text-center lg:text-left lg:text-lg leading-[180%] lg:min-h-[140px]"
+                className="destination-description barlow font-light text-center lg:text-left lg:text-lg leading-[180%] min-h-[150px] md:min-h-[120px] lg:min-h-[140px]"
               >
                 {DESTINATIONS[activeTab].description}
               </motion.p>
@@ -151,39 +185,43 @@ export default function Destination() {
             {/* SEPARATOR */}
             <div className="horizontal-line w-full"></div>
 
-            {/* STATISTICS */}
-            <div className="flex flex-col md:flex-row gap-6 uppercase w-full">
+            {/* STATISTICS - Fixed height container to prevent layout shift */}
+            <div className="flex flex-col md:flex-row gap-6 uppercase w-full min-h-[80px]">
               <div className="flex flex-col gap-3 text-center lg:text-left w-full">
                 <div className="barlow-condensed text-sm tracking-[2px]">
                   Avg. Distance
                 </div>
-                <motion.p
-                  key={DESTINATIONS[activeTab].averageDistance}
-                  variants={variants}
-                  custom={{ y: 30, animateDelay: 0.3, exitDelay: 0.3 }}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className="destination-stats destination-distance bellefair text-white text-[28px]"
-                >
-                  {DESTINATIONS[activeTab].averageDistance}
-                </motion.p>
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={DESTINATIONS[activeTab].averageDistance}
+                    variants={variants}
+                    custom={{ y: 30, animateDelay: 0.5, exitDelay: 0.5 }}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className="destination-stats destination-distance bellefair text-white text-[28px]"
+                  >
+                    {DESTINATIONS[activeTab].averageDistance}
+                  </motion.p>
+                </AnimatePresence>
               </div>
               <div className="flex flex-col gap-3 text-center lg:text-left w-full">
                 <div className="barlow-condensed text-sm tracking-[2px]">
                   Est. Travel Time
                 </div>
-                <motion.p
-                  key={DESTINATIONS[activeTab].description}
-                  variants={variants}
-                  custom={{ y: 30, animateDelay: 0.3, exitDelay: 0.3 }}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className="destination-stats destination-travel-time bellefair text-white text-[28px]"
-                >
-                  {DESTINATIONS[activeTab].travelTime}
-                </motion.p>
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={DESTINATIONS[activeTab].travelTime}
+                    variants={variants}
+                    custom={{ y: 30, animateDelay: 0.5, exitDelay: 0.5 }}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className="destination-stats destination-travel-time bellefair text-white text-[28px]"
+                  >
+                    {DESTINATIONS[activeTab].travelTime}
+                  </motion.p>
+                </AnimatePresence>
               </div>
             </div>
           </div>
