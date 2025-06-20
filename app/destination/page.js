@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import PageLabel from "../components/pageLabel";
 import PageWrapper from "../components/pageWrapper";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useSpring } from "motion/react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
@@ -19,7 +19,7 @@ gsap.registerPlugin(SplitText, ScrambleTextPlugin, Draggable, InertiaPlugin);
 export default function Destination() {
   const [activeTab, setActiveTab] = useState(Object.keys(DESTINATIONS)[0]);
 
-  const variants = {
+  const textAnimation = {
     initial: ({ y = 20 } = {}) => ({
       opacity: 0,
       y: y,
@@ -44,6 +44,49 @@ export default function Destination() {
     }),
   };
 
+  const imageAnimation = {
+    initial: () => ({
+      opacity: 0,
+      scale: 0.8,
+    }),
+    animate: () => ({
+      opacity: 1,
+      scale: 1,
+      rotate: 360,
+      transition: {
+        opacity: {
+          duration: 0.8,
+          delay: 0.1,
+          ease: [0.34, 1.56, 0.64, 1], // back.out(1.6)
+        },
+        scale: {
+          duration: 0.8,
+          delay: 0.1,
+          ease: [0.34, 1.56, 0.64, 1],
+        },
+        rotate: {
+          duration: 60,
+          ease: "linear",
+          repeat: Infinity,
+        },
+      },
+    }),
+    exit: () => ({
+      opacity: 0,
+      scale: 0.8,
+      transition: {
+        duration: 0.4,
+        delay: 0.1,
+        ease: [0.55, 0.085, 0.68, 0.53], // power2.in
+      },
+    }),
+  };
+
+  const constraintRef = useRef(null);
+  const spring = { damping: 3, stiffness: 50, restDelta: 0.001 };
+  const springX = useSpring(0, spring);
+  const springY = useSpring(0, spring);
+
   const scrambleTextConfig = {
     chars: "0123456789KMBIL.",
     revealDelay: 0.2,
@@ -67,16 +110,16 @@ export default function Destination() {
       },
     });
 
-    function startAmbientSpin() {
-      gsap.to(".destination-image", {
-        rotation: "+=360",
-        duration: 60,
-        ease: "none",
-        repeat: -1,
-      });
-    }
+    // function startAmbientSpin() {
+    //   gsap.to(".destination-image", {
+    //     rotation: "+=360",
+    //     duration: 60,
+    //     ease: "none",
+    //     repeat: -1,
+    //   });
+    // }
 
-    startAmbientSpin();
+    // startAmbientSpin();
   }, []);
 
   // useGSAP(() => {
@@ -111,21 +154,38 @@ export default function Destination() {
         {/* HEADER */}
         <PageLabel pageNumber={1} label={"Pick Your Destination"} />
 
-        <main className="flex flex-col items-center justify-center lg:grid lg:grid-cols-2 gap-8 p-6 md:p-10 lg:py-12 xl:px-32">
+        <motion.main
+          ref={constraintRef}
+          className="flex flex-col items-center justify-center lg:grid lg:grid-cols-2 gap-8 p-6 md:p-10 lg:py-12 xl:px-32"
+        >
           {/* PLANET IMAGE */}
           <div
             id="destination-image"
             className="flex items-center justify-center py-16 lg:py-32 w-full"
           >
-            <Image
-              width={150}
-              height={150}
-              src={`/assets/destination/image-${activeTab}.png`}
-              alt={`Photo of ${DESTINATIONS[activeTab].name}`}
-              quality={100}
-              className="destination-image md:w-[300px] md:h-[300px] lg:w-[480px] lg:h-[480px]"
-              priority
-            />
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={DESTINATIONS[activeTab].name}
+                variants={imageAnimation}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                drag
+                dragConstraints={constraintRef}
+                dragElastic={0.05} // Similar to edgeResistance
+                dragTransition={{
+                  type: "inertia",
+                  restDelta: 0.1,
+                  duration: 2,
+                  power: 0.5, // inertia intensity (closer to GSAP throwResistance)
+                  timeConstant: 200, // affects duration of deceleration
+                  modifyTarget: (target) => Math.round(target), // optional rounding
+                }}
+                src={`/assets/destination/image-${activeTab}.png`}
+                alt={`Photo of ${DESTINATIONS[activeTab].name}`}
+                className="destination-image z-50 md:w-[300px] md:h-[300px] lg:w-[480px] lg:h-[480px]"
+              />
+            </AnimatePresence>
           </div>
 
           {/* EXPLANATION */}
@@ -155,11 +215,10 @@ export default function Destination() {
               })}
             </div>
 
-            {/* SOLUTION 2: Separate AnimatePresence with fixed heights */}
             <AnimatePresence mode="wait">
               <motion.h1
                 key={DESTINATIONS[activeTab].name}
-                variants={variants}
+                variants={textAnimation}
                 custom={{ y: 30, animateDelay: 0.1, exitDelay: 0.1 }}
                 initial="initial"
                 animate="animate"
@@ -171,7 +230,7 @@ export default function Destination() {
 
               <motion.p
                 key={DESTINATIONS[activeTab].description}
-                variants={variants}
+                variants={textAnimation}
                 custom={{ y: 30, animateDelay: 0.3, exitDelay: 0.3 }}
                 initial="initial"
                 animate="animate"
@@ -185,7 +244,7 @@ export default function Destination() {
             {/* SEPARATOR */}
             <div className="horizontal-line w-full"></div>
 
-            {/* STATISTICS - Fixed height container to prevent layout shift */}
+            {/* STATISTICS */}
             <div className="flex flex-col md:flex-row gap-6 uppercase w-full min-h-[80px]">
               <div className="flex flex-col gap-3 text-center lg:text-left w-full">
                 <div className="barlow-condensed text-sm tracking-[2px]">
@@ -194,7 +253,7 @@ export default function Destination() {
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={DESTINATIONS[activeTab].averageDistance}
-                    variants={variants}
+                    variants={textAnimation}
                     custom={{ y: 30, animateDelay: 0.5, exitDelay: 0.5 }}
                     initial="initial"
                     animate="animate"
@@ -212,7 +271,7 @@ export default function Destination() {
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={DESTINATIONS[activeTab].travelTime}
-                    variants={variants}
+                    variants={textAnimation}
                     custom={{ y: 30, animateDelay: 0.5, exitDelay: 0.5 }}
                     initial="initial"
                     animate="animate"
@@ -225,7 +284,7 @@ export default function Destination() {
               </div>
             </div>
           </div>
-        </main>
+        </motion.main>
       </div>
     </PageWrapper>
   );
