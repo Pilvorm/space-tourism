@@ -71,9 +71,8 @@ export default function Destination() {
               <AnimatePresence mode="wait">
                 <motion.p
                   key={CREW[activeTab].rank}
-                  ref={(el) => {
-                    if (!el) return;
-                    gsap.to(el, {
+                  onAnimationComplete={() => {
+                    gsap.to(".crew-rank", {
                       scrambleText: {
                         text: CREW[activeTab].rank,
                         ...scrambleTextConfig,
@@ -90,7 +89,7 @@ export default function Destination() {
                     transition: {
                       duration: 0.6,
                       ease: [0.25, 0.46, 0.45, 0.94], // power2.out
-                      delay: 0.4
+                      delay: 0.4,
                     },
                   }}
                   exit={{
@@ -115,7 +114,7 @@ export default function Destination() {
                     transition: {
                       duration: 0.6,
                       ease: [0.25, 0.46, 0.45, 0.94], // power2.out
-                      delay: 0.05
+                      delay: 0.05,
                     },
                   }}
                   exit={{
