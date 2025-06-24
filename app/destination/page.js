@@ -78,15 +78,48 @@ export default function Destination() {
 
         tl.fromTo(
           ".destination-image",
-          { autoAlpha: 0, scale: 0.8 },
+          { autoAlpha: 0, scale: 0.8, overwrite: "auto", },
           {
             autoAlpha: 1,
             scale: 1,
             duration: 1,
             ease: "back.out(1.6)",
-            overwrite: "true",
+            overwrite: "auto",s
           }
+        ).fromTo(
+          ".destination-stats",
+          { autoAlpha: 0, y: 20, overwrite: "auto" },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power2.out",
+            overwrite: "auto",
+          },
+          "-=0.4"
         );
+
+        gsap.to(".destination-distance", {
+          scrambleText: {
+            text: DESTINATIONS[activeTab].averageDistance,
+            ...scrambleTextConfig,
+          },
+          ease: "back.out(1.6)",
+          overwrite: "auto",
+          duration: 2.25,
+          delay: 0.6,
+        });
+
+        gsap.to(".destination-travel-time", {
+          scrambleText: {
+            text: DESTINATIONS[activeTab].travelTime,
+            ...scrambleTextConfig,
+          },
+          ease: "back.out(1.6)",
+          overwrite: "auto",
+          duration: 2.25,
+          delay: 0.6,
+        });
       });
     });
   };
@@ -108,7 +141,17 @@ export default function Destination() {
         duration: 0.5,
         ease: "power2.in",
         overwrite: "auto",
-      });
+      }).to(
+        ".destination-stats",
+        {
+          autoAlpha: 0,
+          y: -15,
+          duration: 0.3,
+          ease: "power2.in",
+          overwrite: "auto",
+        },
+        "-=0.2"
+      );
     });
   };
 
@@ -126,7 +169,9 @@ export default function Destination() {
     if (!isAnimating && isMounted) {
       animateIn();
     }
+  }, [activeTab, isMounted]);
 
+  useGSAP(() => {
     Draggable.create(".destination-image", {
       type: "x,y",
       bounds: document.getElementById("destination-image"),
@@ -155,7 +200,7 @@ export default function Destination() {
     }
 
     startAmbientSpin();
-  }, [activeTab, isMounted]);
+  }, [isMounted]);
 
   return (
     <PageWrapper>
@@ -242,37 +287,17 @@ export default function Destination() {
                 <div className="barlow-condensed text-sm tracking-[2px]">
                   Avg. Distance
                 </div>
-                <AnimatePresence mode="wait">
-                  <motion.p
-                    key={DESTINATIONS[activeTabAlt].averageDistance}
-                    variants={textAnimation}
-                    custom={{ y: 30, animateDelay: 0.5, exitDelay: 0.5 }}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    className="destination-stats destination-distance bellefair text-white text-[28px]"
-                  >
-                    {DESTINATIONS[activeTabAlt].averageDistance}
-                  </motion.p>
-                </AnimatePresence>
+                <p className="destination-stats destination-distance bellefair text-white text-[28px]">
+                  {DESTINATIONS[activeTab].averageDistance}
+                </p>
               </div>
               <div className="flex flex-col gap-3 text-center lg:text-left w-full">
                 <div className="barlow-condensed text-sm tracking-[2px]">
                   Est. Travel Time
                 </div>
-                <AnimatePresence mode="wait">
-                  <motion.p
-                    key={DESTINATIONS[activeTabAlt].travelTime}
-                    variants={textAnimation}
-                    custom={{ y: 30, animateDelay: 0.5, exitDelay: 0.5 }}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    className="destination-stats destination-travel-time bellefair text-white text-[28px]"
-                  >
-                    {DESTINATIONS[activeTabAlt].travelTime}
-                  </motion.p>
-                </AnimatePresence>
+                <p className="destination-stats destination-travel-time bellefair text-white text-[28px]">
+                  {DESTINATIONS[activeTab].travelTime}
+                </p>
               </div>
             </div>
           </div>

@@ -18,7 +18,9 @@ gsap.registerPlugin(SplitText, ScrambleTextPlugin, Draggable, InertiaPlugin);
 
 export default function Destination() {
   const [activeTab, setActiveTab] = useState(Object.keys(DESTINATIONS)[0]);
-  const [activeTabAlt, setActiveTabAlt] = useState(Object.keys(DESTINATIONS)[0]);
+  const [activeTabAlt, setActiveTabAlt] = useState(
+    Object.keys(DESTINATIONS)[0]
+  );
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -59,25 +61,49 @@ export default function Destination() {
 
         tl.fromTo(
           ".destination-image",
-          { autoAlpha: 0, scale: 0.8 },
-          { autoAlpha: 1, scale: 1, duration: 0.8, ease: "back.out(1.6)" }
+          { autoAlpha: 0, scale: 0.8, overwrite: "auto" },
+          {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: "back.out(1.6)",
+            overwrite: "auto",
+          }
         )
           .fromTo(
             ".destination-name",
-            { autoAlpha: 0, y: 30 },
-            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" },
+            { autoAlpha: 0, y: 30, overwrite: "auto" },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power2.out",
+              overwrite: "auto",
+            },
             "-=0.4"
           )
           .fromTo(
             ".destination-description",
-            { autoAlpha: 0, y: 30 },
-            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" },
+            { autoAlpha: 0, y: 30, overwrite: "auto" },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power2.out",
+              overwrite: "auto",
+            },
             "-=0.4"
           )
           .fromTo(
             ".destination-stats",
-            { autoAlpha: 0, y: 20 },
-            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" },
+            { autoAlpha: 0, y: 20, overwrite: "auto" },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power2.out",
+              overwrite: "auto",
+            },
             "-=0.4"
           );
 
@@ -121,6 +147,7 @@ export default function Destination() {
       scale: 0.8,
       duration: 0.4,
       ease: "power2.in",
+      overwrite: "auto",
     })
       .to(
         ".destination-name",
@@ -129,6 +156,7 @@ export default function Destination() {
           y: -20,
           duration: 0.3,
           ease: "power2.in",
+          overwrite: "auto",
         },
         "-=0.3"
       )
@@ -139,6 +167,7 @@ export default function Destination() {
           y: -20,
           duration: 0.3,
           ease: "power2.in",
+          overwrite: "auto",
         },
         "-=0.3"
       )
@@ -149,13 +178,14 @@ export default function Destination() {
           y: -15,
           duration: 0.3,
           ease: "power2.in",
+          overwrite: "auto",
         },
         "-=0.2"
       );
   };
 
   const handleTabClick = (newTab) => {
-    if (newTab === activeTab || isAnimating) return;
+    if (newTab === activeTab) return;
 
     setActiveTabAlt(newTab);
 
@@ -195,7 +225,7 @@ export default function Destination() {
         repeat: -1,
       });
     }
-    
+
     startAmbientSpin();
   }, [activeTab, isMounted]);
 
@@ -232,7 +262,6 @@ export default function Destination() {
                   <button
                     key={key}
                     onClick={() => handleTabClick(key)}
-                    disabled={isAnimating}
                     className={`relative cursor-pointer pb-3 text-center text-sm uppercase tracking-[4px] barlow-condensed transition-colors ${
                       isActive ? "text-white" : "blue-accent"
                     }`}
