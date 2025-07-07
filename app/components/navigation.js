@@ -69,7 +69,7 @@ const Navigation = ({}) => {
             alt="Space Tourism Logo"
           />
         </motion.div>
-        <div className="horizontal-line hidden lg:block z-[99] absolute left-[112px] xl:left-[176px] bottom-[50%] w-[30vw] xl:w-[40vw] 2xl:w-[45vw] transition-all"></div>
+        <div className="horizontal-line hidden lg:block z-[10] absolute left-[112px] xl:left-[176px] bottom-[50%] w-[30vw] xl:w-[40vw] 2xl:w-[45vw] transition-all"></div>
       </Link>
 
       {/* BURGER */}

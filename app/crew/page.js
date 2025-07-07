@@ -57,6 +57,62 @@ export default function Destination() {
   //   });
   // }, [activeTab]);
 
+  const textAnimation = {
+    initial: ({ y = 20 } = {}) => ({
+      opacity: 0,
+      y: y,
+    }),
+    animate: ({ animateDelay = 0 } = {}) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94], // power2.out
+        delay: animateDelay,
+      },
+    }),
+    animateRank: ({ animateDelay = 0 } = {}) => ({
+      opacity: 0.5,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94], // power2.out
+        delay: animateDelay,
+      },
+    }),
+    exit: ({ y = 20, exitDelay = 0.05 } = {}) => ({
+      opacity: 0,
+      y: -y,
+      transition: {
+        duration: 0.3,
+        ease: [0.55, 0.085, 0.68, 0.53], // power2.in
+        delay: exitDelay,
+      },
+    }),
+  };
+
+  const imageAnimation = {
+    initial: () => ({
+      opacity: 0,
+    }),
+    animate: ({ animateDelay = 0 } = {}) => ({
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94], // power2.out
+        delay: animateDelay,
+      },
+    }),
+    exit: ({ exitDelay = 0.05 } = {}) => ({
+      opacity: 0,
+      transition: {
+        duration: 0.3,
+        ease: [0.55, 0.085, 0.68, 0.53], // power2.in
+        delay: exitDelay,
+      },
+    }),
+  };
+
   return (
     <PageWrapper>
       <div className="min-h-screen">
@@ -71,60 +127,24 @@ export default function Destination() {
               <AnimatePresence mode="wait">
                 <motion.p
                   key={CREW[activeTab].rank}
-                  onAnimationComplete={() => {
-                    gsap.to(".crew-rank", {
-                      scrambleText: {
-                        text: CREW[activeTab].rank,
-                        ...scrambleTextConfig,
-                      },
-                      duration: 1.5,
-                      ease: "power2.out",
-                    });
-                  }}
                   className="crew-rank text-lg lg:text-[32px] text-white opacity-50 bellefair"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{
-                    opacity: 0.5,
-                    y: 0,
-                    transition: {
-                      duration: 0.6,
-                      ease: [0.25, 0.46, 0.45, 0.94], // power2.out
-                      delay: 0.4,
-                    },
-                  }}
-                  exit={{
-                    opacity: 0,
-                    y: -20,
-                    transition: {
-                      duration: 0.3,
-                      ease: [0.55, 0.085, 0.68, 0.53], // power2.in
-                      delay: 0.05,
-                    },
-                  }}
+                  variants={textAnimation}
+                  custom={{ y: 20, animateDelay: 1.05, exitDelay: 0.1 }}
+                  initial="initial"
+                  animate="animateRank"
+                  exit="exit"
                 >
                   {CREW[activeTab].rank}
                 </motion.p>
 
                 <motion.h1
                   key={CREW[activeTab].name}
+                  variants={textAnimation}
+                  custom={{ y: 30, animateDelay: 0.45, exitDelay: 0.3 }}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
                   className="crew-name text-2xl md:text-[40px] lg:text-[56px] text-white mt-2"
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: 1,
-                    transition: {
-                      duration: 0.6,
-                      ease: [0.25, 0.46, 0.45, 0.94], // power2.out
-                      delay: 0.05,
-                    },
-                  }}
-                  exit={{
-                    opacity: 0,
-                    transition: {
-                      duration: 0.3,
-                      ease: [0.55, 0.085, 0.68, 0.53], // power2.in
-                      delay: 0.05,
-                    },
-                  }}
                 >
                   {CREW[activeTab].name}
                 </motion.h1>
@@ -154,14 +174,22 @@ export default function Destination() {
 
           {/* CREW IMAGE */}
           <div className="flex items-center justify-center mt-8 pb-8 md:p-0">
-            <Image
-              width={272}
-              height={340}
-              src={`/assets/crew/image-${CREW[activeTab].imgUrl}.png`}
-              alt={`Photo of crew member ${CREW[activeTab].name}`}
-              quality={100}
-              className="fade-bottom object-cover md:w-auto md:h-[560px] lg:h-[676px]"
-            />
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={CREW[activeTab].imgUrl}
+                variants={imageAnimation}
+                custom={{ animateDelay: 0.1, exitDelay: 0.1 }}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                // width={272}
+                // height={340}
+                src={`/assets/crew/image-${CREW[activeTab].imgUrl}.png`}
+                alt={`Photo of crew member ${CREW[activeTab].name}`}
+                // quality={100}
+                className="fade-bottom object-cover md:w-auto md:h-[560px] lg:h-[676px]"
+              />
+            </AnimatePresence>
           </div>
         </main>
       </div>

@@ -26,9 +26,11 @@ export default function RootLayout({ children }) {
       <body className={`${bodyClass} body`}>
         <ReactLenis root />
 
-        <Navigation />
+        <div className="content-wrapper">
+          <Navigation />
 
-        {children}
+          {children}
+        </div>
 
         <ParticlesBackground />
       </body>

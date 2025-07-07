@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import PageLabel from "../components/pageLabel";
 import PageWrapper from "../components/pageWrapper";
-import { motion, AnimatePresence, useSpring } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
@@ -219,7 +219,7 @@ export default function Destination() {
               height={150}
               src={`/assets/destination/image-${activeTab}.png`}
               alt={`Photo of ${DESTINATIONS[activeTab].name}`}
-              className="destination-image z-50 md:w-[300px] md:h-[300px] lg:w-[480px] lg:h-[480px]"
+              className="destination-image relative z-[101] md:w-[300px] md:h-[300px] lg:w-[480px] lg:h-[480px]"
               quality={100}
               priority
             />
