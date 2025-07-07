@@ -14,7 +14,7 @@ const Offcanvas = ({ navLinks, isOpen, setIsOpen }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className={`fixed top-0 left-0 flex flex-col items-center justify-center w-full h-full blue-main-bg shadow-lg z-[9999]`}
+          className={`fixed overflow-y-auto top-0 left-0 flex flex-col items-center justify-center w-full h-full blue-main-bg shadow-lg z-[9999]`}
         >
           {/* <TfiClose
             size={24}

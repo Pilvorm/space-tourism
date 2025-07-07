@@ -84,7 +84,7 @@ export default function Destination() {
             scale: 1,
             duration: 1,
             ease: "back.out(1.6)",
-            overwrite: "auto",s
+            overwrite: "auto",
           }
         ).fromTo(
           ".destination-stats",
