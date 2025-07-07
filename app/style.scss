@@ -38,8 +38,12 @@ body {
   background-attachment: fixed;
   background-color: $blue-main;
   color: $blue-accent;
-  // overflow: hidden;
+  // overflow-x: hidden;
   // transition: background-image 0.75s ease-in-out, background-color 0.75s ease-in-out;
+}
+
+.page-wrapper {
+  overflow: hidden;
 }
 
 .blue-main {

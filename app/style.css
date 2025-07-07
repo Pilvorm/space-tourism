@@ -42,6 +42,10 @@ body {
   color: #d0d6f9;
 }
 
+.page-wrapper {
+  overflow: hidden;
+}
+
 .blue-main {
   color: #0b0d17;
 }

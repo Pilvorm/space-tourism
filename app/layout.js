@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className={bodyClass}>
+      <body className={`${bodyClass} body`}>
         <ReactLenis root />
 
         <Navigation />
