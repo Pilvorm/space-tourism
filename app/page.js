@@ -66,7 +66,7 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      <main className="md:min-h-screen flex flex-col lg:justify-end py-6 md:py-24 px-6 md:px-10 xl:px-32">
+      <main className="min-h-screen flex flex-col lg:justify-end py-6 md:py-24 px-6 md:px-10 xl:px-32">
         <div className="flex flex-col lg:flex-row items-center lg:items-end justify-between gap-12 px-0 md:px-12 text-center lg:text-left">
           {/* TEXTS */}
           <div className="flex flex-col gap-6">

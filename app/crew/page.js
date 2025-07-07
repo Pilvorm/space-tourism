@@ -59,7 +59,7 @@ export default function Destination() {
 
   return (
     <PageWrapper>
-      <div className="md:min-h-screen">
+      <div className="min-h-screen">
         {/* HEADER */}
         <PageLabel pageNumber={2} label={"Meet Your Crew"} />
 

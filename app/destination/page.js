@@ -204,7 +204,7 @@ export default function Destination() {
 
   return (
     <PageWrapper>
-      <div className="md:min-h-screen z-0">
+      <div className="min-h-screen z-0">
         {/* HEADER */}
         <PageLabel pageNumber={1} label={"Pick Your Destination"} />
 

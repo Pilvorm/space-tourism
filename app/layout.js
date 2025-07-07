@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
       <body className={bodyClass}>
         <ReactLenis root />
 
-        {/* <Navigation /> */}
+        <Navigation />
 
         {children}
 
