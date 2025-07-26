@@ -62,17 +62,8 @@ export default function Destination() {
       opacity: 0,
       y: y,
     }),
-    animate: ({ animateDelay = 0 } = {}) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94], // power2.out
-        delay: animateDelay,
-      },
-    }),
-    animateRank: ({ animateDelay = 0 } = {}) => ({
-      opacity: 0.5,
+    animate: ({ animateDelay = 0, opacity = 1 } = {}) => ({
+      opacity: opacity,
       y: 0,
       transition: {
         duration: 0.6,
@@ -98,7 +89,7 @@ export default function Destination() {
     animate: ({ animateDelay = 0 } = {}) => ({
       opacity: 1,
       transition: {
-        duration: 0.6,
+        duration: 1,
         ease: [0.25, 0.46, 0.45, 0.94], // power2.out
         delay: animateDelay,
       },
@@ -129,9 +120,14 @@ export default function Destination() {
                   key={CREW[activeTab].rank}
                   className="crew-rank text-lg lg:text-[32px] text-white opacity-50 bellefair"
                   variants={textAnimation}
-                  custom={{ y: 20, animateDelay: 1.05, exitDelay: 0.1 }}
+                  custom={{
+                    y: 30,
+                    animateDelay: 0.35,
+                    exitDelay: 0.1,
+                    opacity: 0.5,
+                  }}
                   initial="initial"
-                  animate="animateRank"
+                  animate="animate"
                   exit="exit"
                 >
                   {CREW[activeTab].rank}
@@ -151,9 +147,19 @@ export default function Destination() {
               </AnimatePresence>
             </div>
 
-            <p className="text-base leading-[180%] min-h-[180px] sm:min-h-[120px] transition-all">
-              {CREW[activeTab].description}
-            </p>
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={CREW[activeTab].description}
+                variants={textAnimation}
+                custom={{ y: 30, animateDelay: 0.55, exitDelay: 0.5 }}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="text-base leading-[180%] min-h-[180px] sm:min-h-[120px]"
+              >
+                {CREW[activeTab].description}
+              </motion.p>
+            </AnimatePresence>
 
             {/* TABS */}
             <div className="flex justify-center lg:justify-start gap-4 w-full lg:mt-auto">
@@ -178,7 +184,7 @@ export default function Destination() {
               <motion.img
                 key={CREW[activeTab].imgUrl}
                 variants={imageAnimation}
-                custom={{ animateDelay: 0.1, exitDelay: 0.1 }}
+                custom={{ animateDelay: 0.35, exitDelay: 0.3 }}
                 initial="initial"
                 animate="animate"
                 exit="exit"
