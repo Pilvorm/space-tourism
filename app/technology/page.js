@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import PageLabel from "../components/pageLabel";
 import PageWrapper from "../components/pageWrapper";
 import { motion } from "motion/react";
@@ -15,8 +15,11 @@ gsap.registerPlugin(ScrambleTextPlugin);
 
 export default function Destination() {
   const [activeTab, setActiveTab] = useState(Object.keys(TECHNOLOGIES)[0]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const techImgWrapperRef = useRef(null);
+
+  const slidesArrayRef = useRef([]);
+  const currentIndexRef = useRef(0);
+  const isTweeningRef = useRef(false);
 
   const scrambleTextConfig = {
     chars: "0123456789KMBIL.",
@@ -26,55 +29,21 @@ export default function Destination() {
   };
 
   useGSAP(() => {
-    // const sliders = gsap.utils.toArray(".tech-img-wrapper");
-    // const slidesArray = sliders.map((slider) =>
-    //   gsap.utils.toArray(".tech-img", slider)
-    // );
+    const sliders = gsap.utils.toArray(".tech-img-wrapper");
+    slidesArrayRef.current = sliders.map((slider) =>
+      gsap.utils.toArray(".tech-img", slider)
+    );
 
-    // slidesArray.forEach((slides) => {
-    //   slides.forEach((slide, i) => {
-    //     gsap.set(slide, {
-    //       xPercent: i > 0 && 100,
-    //     });
-    //   });
-    // });
-
-    // const goToSlide = (value) => {
-    //   if (isAnimating) return;
-    //   setIsAnimating(true);
-
-    //   const first = slidesArray[0];
-    //   const currentSlides = [];
-    //   const nextSlides = [];
-    //   slidesArray.forEach((slides) => currentSlides.push(slides[currentIndex]));
-
-    //   if (first[currentIndex + value]) currentIndex += value;
-    //   else currentIndex = value > 0 ? 0 : first.length - 1;
-
-    //   slidesArray.forEach((slides) => nextSlides.push(slides[currentIndex]));
-
-    //   if (value > 0) {
-    //     gsap.set(nextSlides, { xPercent: 100 });
-    //     gsap.to(currentSlides, {
-    //       xPercent: -100,
-    //       onComplete: () => (isTweening = false),
-    //     });
-    //   } else {
-    //     gsap.set(nextSlides, { xPercent: -100 });
-    //     gsap.to(currentSlides, {
-    //       xPercent: 100,
-    //       onComplete: () => (isTweening = false),
-    //     });
-    //   }
-    //   gsap.to(nextSlides, { xPercent: 0 });
-    // };
-
-    document.fonts.ready.then(() => {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          setIsAnimating(false);
-        },
+    slidesArrayRef.current.forEach((slides) => {
+      slides.forEach((slide, i) => {
+        gsap.set(slide, { xPercent: i > 0 ? 100 : 0 });
       });
+    });
+  }, []);
+
+  useGSAP(() => {
+    document.fonts.ready.then(() => {
+      const tl = gsap.timeline({});
 
       tl.to(".technology-name", {
         scrambleText: {
@@ -88,6 +57,44 @@ export default function Destination() {
     });
   }, [activeTab]);
 
+  const goToSlide = (value) => {
+    if (isTweeningRef.current) return;
+    isTweeningRef.current = true;
+
+    const first = slidesArrayRef.current[0];
+    const currentSlides = [];
+    const nextSlides = [];
+
+    slidesArrayRef.current.forEach((slides) =>
+      currentSlides.push(slides[currentIndexRef.current])
+    );
+
+    if (first[currentIndexRef.current + value]) {
+      currentIndexRef.current += value;
+    } else {
+      currentIndexRef.current = value > 0 ? 0 : first.length - 1;
+    }
+
+    slidesArrayRef.current.forEach((slides) =>
+      nextSlides.push(slides[currentIndexRef.current])
+    );
+
+    if (value > 0) {
+      gsap.set(nextSlides, { xPercent: 100 });
+      gsap.to(currentSlides, {
+        xPercent: -100,
+        onComplete: () => (isTweeningRef.current = false),
+      });
+    } else {
+      gsap.set(nextSlides, { xPercent: -100 });
+      gsap.to(currentSlides, {
+        xPercent: 100,
+        onComplete: () => (isTweeningRef.current = false),
+      });
+    }
+    gsap.to(nextSlides, { xPercent: 0 });
+  };
+
   return (
     <PageWrapper>
       <div className="min-h-screen">
@@ -96,15 +103,18 @@ export default function Destination() {
 
         <main className="flex flex-col items-center justify-center lg:justify-between lg:flex-row-reverse lg:gap-8 pt-22 xl:pl-32 xl:pb-12">
           {/* IMAGE */}
-          <div className="tech-img-wrapper relative flex items-center justify-center w-full h-[258px] md:h-[357px] lg:h-[500px] lg:w-[500px] xl:h-[600px] xl:w-[600px]">
-            <Image
+          <div
+            ref={techImgWrapperRef}
+            className="tech-img-wrapper relative overflow-hidden flex items-center justify-center w-full h-[258px] md:h-[357px] lg:h-[500px] lg:w-[500px] xl:h-[600px] xl:w-[600px]"
+          >
+            {/* <Image
               fill
               src={`/assets/technology/image-${TECHNOLOGIES[activeTab].imgUrl}-portrait.jpg`}
               alt="PLANET"
               quality={100}
               className="tech-img object-cover object-bottom"
-            />
-            {/* {Object.entries(TECHNOLOGIES).map(([key, tech], index) => {
+            /> */}
+            {Object.entries(TECHNOLOGIES).map(([key, tech], index) => {
               return (
                 <Image
                   key={key}
@@ -112,10 +122,10 @@ export default function Destination() {
                   src={`/assets/technology/image-${tech.imgUrl}-portrait.jpg`}
                   alt={tech.name}
                   quality={100}
-                  className="tech-img absolute top-0 left-0 object-cover object-bottom"
+                  className="tech-img object-cover object-bottom"
                 />
               );
-            })} */}
+            })}
           </div>
 
           {/* INFO */}
@@ -127,7 +137,10 @@ export default function Destination() {
                 return (
                   <button
                     key={key}
-                    onClick={() => setActiveTab(key)}
+                    onClick={() => {
+                      setActiveTab(key);
+                      goToSlide(1);
+                    }}
                     className={`cursor-pointer bellefair text-lg md:text-2xl w-[40px] h-[40px] md:w-[56px] md:h-[56px] lg:w-[80px] lg:h-[80px] rounded-full transition-all ${
                       isActive
                         ? "bg-white blue-main"
