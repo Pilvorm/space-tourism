@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useRef } from "react";
 import PageLabel from "../components/pageLabel";
 import PageWrapper from "../components/pageWrapper";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
@@ -21,11 +21,29 @@ export default function Destination() {
   const currentIndexRef = useRef(0);
   const isTweeningRef = useRef(false);
 
-  const scrambleTextConfig = {
-    chars: "0123456789KMBIL.",
-    revealDelay: 0.2,
-    tweenLength: false,
-    speed: 1,
+  const textAnimation = {
+    initial: ({ y = 20 } = {}) => ({
+      opacity: 0,
+      y: y,
+    }),
+    animate: ({ animateDelay = 0, opacity = 1 } = {}) => ({
+      opacity: opacity,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94], // power2.out
+        delay: animateDelay,
+      },
+    }),
+    exit: ({ y = 20, exitDelay = 0.05 } = {}) => ({
+      opacity: 0,
+      y: -y,
+      transition: {
+        duration: 0.3,
+        ease: [0.55, 0.085, 0.68, 0.53], // power2.in
+        delay: exitDelay,
+      },
+    }),
   };
 
   useGSAP(() => {
@@ -41,58 +59,49 @@ export default function Destination() {
     });
   }, []);
 
-  useGSAP(() => {
-    document.fonts.ready.then(() => {
-      const tl = gsap.timeline({});
-
-      tl.to(".technology-name", {
-        scrambleText: {
-          text: TECHNOLOGIES[activeTab].name,
-          ...scrambleTextConfig,
-        },
-        ease: "back.out(1.6)",
-        overwrite: "auto",
-        duration: 2,
-      });
-    });
-  }, [activeTab]);
-
-  const goToSlide = (value) => {
+  const goToSlide = (targetIndex) => {
     if (isTweeningRef.current) return;
+    if (currentIndexRef.current === targetIndex) return;
+
     isTweeningRef.current = true;
 
-    const first = slidesArrayRef.current[0];
-    const currentSlides = [];
-    const nextSlides = [];
+    const currentIndex = currentIndexRef.current;
+    const nextIndex = targetIndex;
 
-    slidesArrayRef.current.forEach((slides) =>
-      currentSlides.push(slides[currentIndexRef.current])
+    const currentSlides = slidesArrayRef.current.map(
+      (slides) => slides[currentIndex]
+    );
+    const nextSlides = slidesArrayRef.current.map(
+      (slides) => slides[nextIndex]
     );
 
-    if (first[currentIndexRef.current + value]) {
-      currentIndexRef.current += value;
-    } else {
-      currentIndexRef.current = value > 0 ? 0 : first.length - 1;
-    }
+    const direction = nextIndex > currentIndex ? 1 : -1;
 
-    slidesArrayRef.current.forEach((slides) =>
-      nextSlides.push(slides[currentIndexRef.current])
-    );
-
-    if (value > 0) {
+    if (direction > 0) {
       gsap.set(nextSlides, { xPercent: 100 });
       gsap.to(currentSlides, {
         xPercent: -100,
-        onComplete: () => (isTweeningRef.current = false),
+        duration: 1,
+        ease: "power2.out",
       });
     } else {
       gsap.set(nextSlides, { xPercent: -100 });
       gsap.to(currentSlides, {
         xPercent: 100,
-        onComplete: () => (isTweeningRef.current = false),
+        duration: 1,
+        ease: "power2.out",
       });
     }
-    gsap.to(nextSlides, { xPercent: 0 });
+
+    gsap.to(nextSlides, {
+      xPercent: 0,
+      duration: 1,
+      ease: "power2.out",
+      onComplete: () => {
+        currentIndexRef.current = nextIndex;
+        isTweeningRef.current = false;
+      },
+    });
   };
 
   return (
@@ -107,13 +116,6 @@ export default function Destination() {
             ref={techImgWrapperRef}
             className="tech-img-wrapper relative overflow-hidden flex items-center justify-center w-full h-[258px] md:h-[357px] lg:h-[500px] lg:w-[500px] xl:h-[600px] xl:w-[600px]"
           >
-            {/* <Image
-              fill
-              src={`/assets/technology/image-${TECHNOLOGIES[activeTab].imgUrl}-portrait.jpg`}
-              alt="PLANET"
-              quality={100}
-              className="tech-img object-cover object-bottom"
-            /> */}
             {Object.entries(TECHNOLOGIES).map(([key, tech], index) => {
               return (
                 <Image
@@ -138,8 +140,8 @@ export default function Destination() {
                   <button
                     key={key}
                     onClick={() => {
+                      goToSlide(index);
                       setActiveTab(key);
-                      goToSlide(1);
                     }}
                     className={`cursor-pointer bellefair text-lg md:text-2xl w-[40px] h-[40px] md:w-[56px] md:h-[56px] lg:w-[80px] lg:h-[80px] rounded-full transition-all ${
                       isActive
@@ -159,14 +161,38 @@ export default function Destination() {
                 <span className="lg:text-left text-lg md:text-2xl lg:text-[32px] text-white opacity-50">
                   THE TERMINOLOGY...
                 </span>
-                <h1 className="technology-name text-2xl md:text-[40px] lg:text-[56px] text-white">
-                  {TECHNOLOGIES[activeTab].name}
-                </h1>
+                <AnimatePresence mode="wait">
+                  <motion.h1
+                    key={TECHNOLOGIES[activeTab].name}
+                    variants={textAnimation}
+                    custom={{
+                      y: 30,
+                      animateDelay: 0.35,
+                      exitDelay: 0.1,
+                    }}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className="technology-name text-2xl md:text-[40px] lg:text-[56px] text-white"
+                  >
+                    {TECHNOLOGIES[activeTab].name}
+                  </motion.h1>
+                </AnimatePresence>
               </div>
 
-              <p className="text-center lg:text-left text-base lg:text-lg leading-[180%] md:w-[70%] lg:w-full md:self-center lg:self-start">
-                {TECHNOLOGIES[activeTab].description}
-              </p>
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={TECHNOLOGIES[activeTab].description}
+                  variants={textAnimation}
+                  custom={{ y: 30, animateDelay: 0.45, exitDelay: 0.3 }}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="text-center lg:text-left text-base lg:text-lg leading-[180%] md:w-[70%] lg:w-full md:self-center lg:self-start min-h-[165px]"
+                >
+                  {TECHNOLOGIES[activeTab].description}
+                </motion.p>
+              </AnimatePresence>
             </div>
           </div>
         </main>

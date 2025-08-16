@@ -6,7 +6,6 @@ import PageLabel from "../components/pageLabel";
 import PageWrapper from "../components/pageWrapper";
 import { motion, AnimatePresence } from "motion/react";
 import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 import { TextPlugin } from "gsap/TextPlugin";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
@@ -24,38 +23,6 @@ export default function Destination() {
     tweenLength: false,
     speed: 1,
   };
-
-  // useGSAP(() => {
-  //   let splitHeading = SplitText.create(".crew-name");
-
-  //   document.fonts.ready.then(() => {
-  //     gsap.fromTo(
-  //       ".crew-rank",
-  //       {
-  //         // autoAlpha: 0,
-  //         // y: 30,
-  //       },
-  //       {
-  //         // autoAlpha: 0.5,
-  //         // y: 0,
-  //         scrambleText: {
-  //           text: CREW[activeTab].rank,
-  //           ...scrambleTextConfig,
-  //         },
-  //         ease: "back.out(1.6)",
-  //         overwrite: "auto",
-  //         duration: 2,
-  //       }
-  //     );
-
-  //     gsap.from(splitHeading.chars, {
-  //       duration: 1,
-  //       autoAlpha: 0,
-  //       ease: "power1.inOut",
-  //       stagger: 0.02,
-  //     });
-  //   });
-  // }, [activeTab]);
 
   const textAnimation = {
     initial: ({ y = 20 } = {}) => ({
@@ -118,7 +85,6 @@ export default function Destination() {
               <AnimatePresence mode="wait">
                 <motion.p
                   key={CREW[activeTab].rank}
-                  className="crew-rank text-lg lg:text-[32px] text-white opacity-50 bellefair"
                   variants={textAnimation}
                   custom={{
                     y: 30,
@@ -129,6 +95,7 @@ export default function Destination() {
                   initial="initial"
                   animate="animate"
                   exit="exit"
+                  className="crew-rank text-lg lg:text-[32px] text-white opacity-50 bellefair"
                 >
                   {CREW[activeTab].rank}
                 </motion.p>
